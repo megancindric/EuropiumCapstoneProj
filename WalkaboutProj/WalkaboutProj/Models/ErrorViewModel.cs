@@ -1,6 +1,6 @@
 using System;
 
-namespace EuropiumCapstone.Models
+namespace WalkaboutProj.Models
 {
     public class ErrorViewModel
     {
