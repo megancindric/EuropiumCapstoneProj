@@ -25,6 +25,10 @@ namespace WalkaboutProj.Data
             }
             );
         }
+        public DbSet<Models.Wanderer> Wanderers { get; set; }
+        public DbSet<Models.Route> Routes { get; set; }
+        public DbSet<Models.Marker> Markers { get; set; }
+
 
     }
 }
