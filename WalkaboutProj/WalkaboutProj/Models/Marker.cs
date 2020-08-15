@@ -29,8 +29,9 @@ namespace WalkaboutProj.Models
 
         [Display(Name = "Favorite")]
         public bool IsFavorite { get; set; }
-        
-        public double LocationLat { get; set; }
-        public double LocationLong { get; set; }
+        public double PointValue { get; set; }
+
+        public double MarkerLat { get; set; }
+        public double MarkerLong { get; set; }
     }
 }
