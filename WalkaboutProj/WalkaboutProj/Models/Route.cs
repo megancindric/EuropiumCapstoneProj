@@ -13,7 +13,7 @@ namespace WalkaboutProj.Models
         public int RouteId { get; set; }
 
         [ForeignKey("WandererId")]
-        public string WandererId { get; set; }
+        public int WandererId { get; set; }
 
         [Required(ErrorMessage = "Please name your route")]
         [Display(Name = "Route Name")]
@@ -28,13 +28,16 @@ namespace WalkaboutProj.Models
         [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
 
-        [Display(Name = "Route Markers")]
-        public List<Marker> RouteMarkers { get; set; }
-
         [Display(Name = "Total Distance")]
         public double TotalDistance { get; set; }
 
         [Display(Name = "Total Points")]
         public double TotalPoints { get; set; }
+
+        [Display(Name = "Start Latitude")]
+        public double LocationLat { get; set; }
+
+        [Display(Name = "Start Longitude")]
+        public double LocationLong { get; set; }
     }
 }

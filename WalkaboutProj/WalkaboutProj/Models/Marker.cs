@@ -12,22 +12,17 @@ namespace WalkaboutProj.Models
         [Key]
         public int MarkerId { get; set; }
 
-        [ForeignKey("WandererId")]
-        public string WandererId { get; set; }
-
         [ForeignKey("RouteId")]
-        public string RouteId { get; set; }
+        public int RouteId { get; set; }
 
-        [Required(ErrorMessage = "Please enter a name for your marker")]
         [Display(Name = "Name")]
         public string MarkerName { get; set; }
 
-        [Required(ErrorMessage = "Please select a category")]
         [Display(Name = "Category")]
         public string MarkerCategory { get; set; }
 
         [Display(Name = "Image")]
-        public string PictureId { get; set; }
+        public string PicturePath { get; set; }
 
         [Display(Name = "Description")]
         public string MarkerDescription { get; set; }

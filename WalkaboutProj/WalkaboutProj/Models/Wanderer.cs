@@ -41,13 +41,5 @@ namespace WalkaboutProj.Models
         [Display(Name = "Preferred Unit")]
         public string UnitPreference { get; set; }
 
-        [Display(Name = "Weekly Points")]
-        public double WeeklyPoints { get; set; }
-
-        [Display(Name = "Weekly Distance")]
-        public double WeeklyDistance { get; set; }
-
-        [Display(Name = "Friends List")]
-        public List<Wanderer> FriendsList { get; set; }
     }
 }
