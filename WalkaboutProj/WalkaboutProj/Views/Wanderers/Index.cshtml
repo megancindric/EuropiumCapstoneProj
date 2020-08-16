@@ -1,0 +1,35 @@
+﻿@model WalkaboutProj.Models.WandererIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid">
+    <div class="jumbotron">
+        <h1>Hello, @Html.DisplayFor(model => model.Wanderer.Username)!</h1>
+        <p><a href="https://www.tutorialrepublic.com" target="_blank" class="btn btn-primary btn-lg">Take a walk!</a></p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Profile information will go here</h2>
+        </div>
+        <div class="col-md-6">
+            <h2>Highscores etc. can go here</h2>
+        </div>
+    </div>
+    <div class="row">
+        <h2>Map dashboard here!</h2>
+        <div id="map"></div>
+
+    </div>
+</div>
+<script>
+    function initMap() {
+        var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong};
+        var map = new google.maps.Map(
+            document.getElementById('map'), {
+                zoom: 14, center: currentLocation, mapTypeId: "roadmap" });
+    }
+</script>

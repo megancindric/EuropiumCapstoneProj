@@ -9,5 +9,7 @@ namespace WalkaboutProj.Models
     {
         public Wanderer Wanderer { get; set; }
         public List<Route> MyRoutes { get; set; }
+        public double WandererLat { get; set; }
+        public double WandererLong { get; set; }
     }
 }

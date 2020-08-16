@@ -1,8 +1,29 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1>Walkabout</h1>
+            <p class="lead">Walking doesn't have to be boring!  With this innovative technology designed by Sharon Philipps, you can create fun and engaging walks right in your own neighborhood!</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>How it Works:</h2>
+                <p>
+                    Using Google Maps API & Google Directions, we're able to create dynamic, custom routes in your community!
+                    We'll keep track of your distance, time, and more importantly, your points!
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h2>Points? Tell me more!</h2>
+                <p>
+                    It's not the destination, it's the journey!  We'll help you track every statue, tree, and animal friend you
+                    pass while you're out on your walkabout.  Each marker you place will add to your total score, and when your
+                    walk is finished you'll have the chance to add pictures, save your routes, and more!
+                </p>
+            </div>
+        </div>
+    </div>

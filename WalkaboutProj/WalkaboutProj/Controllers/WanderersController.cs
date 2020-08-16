@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WalkaboutProj.Data;
 using WalkaboutProj.Models;
+using GoogleMaps.LocationServices;
+
 
 namespace WalkaboutProj.Controllers
 {
@@ -26,7 +28,7 @@ namespace WalkaboutProj.Controllers
             WandererIndexViewModel wandererView = new WandererIndexViewModel();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             wandererView.Wanderer = _context.Wanderers.Where(w => w.IdentityUserId == userId).FirstOrDefault();
-            wandererView.MyRoutes = _context.Routes.Where(r => r.WandererId == wandererView.Wanderer.WandererId).ToList();
+            //wandererView.MyRoutes = _context.Routes.Where(r => r.WandererId == wandererView.Wanderer.WandererId).ToList();
             return View(wandererView);
         }
         [HttpPost]
@@ -367,6 +369,19 @@ namespace WalkaboutProj.Controllers
         private bool MarkerExists(int id)
         {
             return _context.Markers.Any(e => e.MarkerId == id);
+        }
+
+        public WandererIndexViewModel Geocode(WandererIndexViewModel indexView)
+        {
+            AddressData address = new AddressData
+            {
+                Zip = indexView.Wanderer.ZipCode
+            };
+            var geocodeRequest = new GoogleLocationService("AIzaSyC-sDEHg4S5V1rYbnFEtFhekTHAxeHSgcI");
+            var latlong = geocodeRequest.GetLatLongFromAddress(address);
+            indexView.WandererLat = latlong.Latitude;
+            indexView.WandererLong = latlong.Longitude;
+            return indexView;
         }
     }
 }
