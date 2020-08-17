@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WalkaboutProj.Data;
 
-namespace WalkaboutProj.Data.Migrations
+namespace WalkaboutProj.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -48,8 +48,8 @@ namespace WalkaboutProj.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b946729f-a795-4360-84d6-cbaf97d76790",
-                            ConcurrencyStamp = "7495abec-26d3-4da1-93e7-e8b46204315d",
+                            Id = "32ea3930-faff-40c6-9c34-febfbbbf8875",
+                            ConcurrencyStamp = "13e3ccf2-417f-424d-b3e5-8f11809c9834",
                             Name = "Wanderer",
                             NormalizedName = "WANDERER"
                         });

@@ -7,17 +7,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WalkaboutProj.Data;
 
-namespace WalkaboutProj.Data.Migrations
+namespace WalkaboutProj.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200812153433_Init")]
-    partial class Init
+    [Migration("20200817000028_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
+                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -50,8 +50,8 @@ namespace WalkaboutProj.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7377a85d-2824-4727-a69b-f264224afcd1",
-                            ConcurrencyStamp = "40a5eed1-e7d1-43be-ada8-8f84987e4f93",
+                            Id = "32ea3930-faff-40c6-9c34-febfbbbf8875",
+                            ConcurrencyStamp = "13e3ccf2-417f-424d-b3e5-8f11809c9834",
                             Name = "Wanderer",
                             NormalizedName = "WANDERER"
                         });
@@ -226,6 +226,126 @@ namespace WalkaboutProj.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("WalkaboutProj.Models.Marker", b =>
+                {
+                    b.Property<int>("MarkerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MarkerCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MarkerDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("MarkerLat")
+                        .HasColumnType("float");
+
+                    b.Property<double>("MarkerLong")
+                        .HasColumnType("float");
+
+                    b.Property<string>("MarkerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PicturePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PointValue")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MarkerId");
+
+                    b.ToTable("Markers");
+                });
+
+            modelBuilder.Entity("WalkaboutProj.Models.Route", b =>
+                {
+                    b.Property<int>("RouteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("LocationLat")
+                        .HasColumnType("float");
+
+                    b.Property<double>("LocationLong")
+                        .HasColumnType("float");
+
+                    b.Property<string>("RouteDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RouteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("TotalDistance")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalPoints")
+                        .HasColumnType("float");
+
+                    b.Property<int>("WandererId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RouteId");
+
+                    b.ToTable("Routes");
+                });
+
+            modelBuilder.Entity("WalkaboutProj.Models.Wanderer", b =>
+                {
+                    b.Property<int>("WandererId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnitPreference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WandererId");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("Wanderers");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -275,6 +395,13 @@ namespace WalkaboutProj.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WalkaboutProj.Models.Wanderer", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
                 });
 #pragma warning restore 612, 618
         }
