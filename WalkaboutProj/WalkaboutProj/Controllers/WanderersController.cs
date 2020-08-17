@@ -382,22 +382,23 @@ namespace WalkaboutProj.Controllers
             {
                 Zip = indexView.Wanderer.ZipCode
             };
-            var geocodeRequest = new GoogleLocationService("");
+            var geocodeRequest = new GoogleLocationService(APIKeys.APIKEY);
             var latlong = geocodeRequest.GetLatLongFromAddress(address);
             indexView.WandererLat = latlong.Latitude;
             indexView.WandererLong = latlong.Longitude;
             return indexView;
         }
-        public MapPoint GeocodeRoute(Wanderer wanderer)
+        public TakeAWalkViewModel GeocodeRoute(TakeAWalkViewModel viewModel)
         {
             AddressData address = new AddressData
             {
-                Zip = wanderer.ZipCode
+                Zip = viewModel.Wanderer.ZipCode
             };
-            var geocodeRequest = new GoogleLocationService("");
+            var geocodeRequest = new GoogleLocationService(APIKeys.APIKEY);
             var latlong = geocodeRequest.GetLatLongFromAddress(address);
-          
-            return latlong;
+            viewModel.WandererLat = latlong.Latitude;
+            viewModel.WandererLong = latlong.Longitude;
+            return viewModel;
         }
         public IActionResult TakeAWalk()
         {
@@ -405,7 +406,7 @@ namespace WalkaboutProj.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             viewModel.Wanderer = _context.Wanderers.Where(s => s.IdentityUserId == userId).FirstOrDefault();
             //viewModel.MyRoutes = _context.Routes.Where(r => r.WandererId == viewModel.Wanderer.WandererId).ToList();
-            viewModel.MapPoint = GeocodeRoute(viewModel.Wanderer);
+            viewModel = GeocodeRoute(viewModel);
 
             return View(viewModel);
         }
@@ -415,7 +416,7 @@ namespace WalkaboutProj.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             viewModel.Wanderer = _context.Wanderers.Where(s => s.IdentityUserId == userId).FirstOrDefault();
             //viewModel.MyRoutes = _context.Routes.Where(r => r.WandererId == viewModel.Wanderer.WandererId).ToList();
-            viewModel.MapPoint = GeocodeRoute(viewModel.Wanderer);
+            viewModel = GeocodeRoute(viewModel);
 
             return View(viewModel);
         }

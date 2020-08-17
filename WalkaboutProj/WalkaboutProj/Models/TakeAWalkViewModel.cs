@@ -9,6 +9,7 @@ namespace WalkaboutProj.Models
     public class TakeAWalkViewModel
     {
         public Wanderer Wanderer { get; set; }
-        public MapPoint MapPoint { get; set; }
+        public double WandererLat { get; set; }
+        public double WandererLong { get; set; }
     }
 }
