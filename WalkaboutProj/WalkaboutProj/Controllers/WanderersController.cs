@@ -317,11 +317,19 @@ namespace WalkaboutProj.Controllers
         }
         // GET a marker
         [HttpGet]
-        public IActionResult GetMarkers()
+        public IActionResult GetAllMarkers()
         {
             //get entire list of markers in DB
             IList<Marker> markers = _context.Markers.ToList();
             return Ok(markers);
+        }
+
+        [HttpGet("{routeId}")]
+        public IActionResult GetRouteMarkers(int routeId)
+        {
+            IList<Marker> routeMarkers = _context.Markers.Where(s => s.RouteId == routeId).ToList();
+            return Ok(routeMarkers);
+
         }
         // GET specific marker
         [HttpGet("{id}")]
@@ -361,11 +369,11 @@ namespace WalkaboutProj.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteMarker(int id)
+        [HttpDelete]
+        public IActionResult DeleteMarker(int MarkerId)
         {
             // Delete movie from db logic
-            var markerToDelete = _context.Markers.Where(s => s.MarkerId == id).SingleOrDefault();
+            var markerToDelete = _context.Markers.Where(s => s.MarkerId == MarkerId).FirstOrDefault();
             if (markerToDelete == null)
             {
                 return NotFound();

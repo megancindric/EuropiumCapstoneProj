@@ -8,7 +8,7 @@
 <h1>Let's take a Walk!</h1>
 <div class="container-fluid">
     <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" data-target="#collapseTest">Start your walk!</button>
-    <button type="button" class="btn btn-secondary btn-lg">End your walk!</button>
+    <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" onclick="getRouteMarkers(1)"data-target="#collapseTest">End your walk!</button>
 
     <br />
     <div class="row">
@@ -30,6 +30,52 @@
             </table>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form id="edit-marker">
+                <h3>Edit this Marker</h3>
+                <div class="form-group">
+                    <input id="hiddenMarkerId" name="hiddenMarkerId" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenRouteId" name="hiddenRouteId" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenIsFavorite" name="hiddenIsFavorite" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenPointValue" name="hiddenPointValue" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenMarkerLat" name="hiddenMarkerLat" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenMarkerLong" name="hiddenMarkerLong" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenPicturePath" name="hiddenPicturePath" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Marker Name" id="editMarkerName" />
+                </div>
+                <div class="form-group">
+                    <select class="form-control form-control-sm" id="editMarkerCategory">
+                        <option value="" disabled selected hidden>Select a Category</option>
+                        <option value="StartPoint">Starting Point</option>
+                        <option value="Wildlife">Wildlife</option>
+                        <option value="Landmark">Landmark</option>
+                        <option value="Highlight">Highlight</option>
+                        <option value="EndPoint">Ending Point</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control form-control-sm" id="markerDescription" rows="2" placeholder="Enter a Description">
+                 </textarea>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateMarker()">Update this Marker:</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script src="~/Scripts/TakeAWalk.js"></script>
@@ -37,7 +83,7 @@
 <script async defer src="@APIKeys.APIURL">
 </script>
 <script>
- 
+
         var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong };
         var map;
         function initMap() {
@@ -83,7 +129,7 @@
                 //Find save button in infoWindow
                 var saveBtn = contentString.find('button.save-marker')[0];
                 google.maps.event.addDomListener(removeBtn, "click", function (event) {
-                    marker.setMap(null);
+                    removeMarker(marker);
                 });
 
                 google.maps.event.addDomListener(saveBtn, "click", function (event) {
@@ -92,7 +138,7 @@
                     var markerDescription = document.getElementById("markerDescription").value;
                     var markerLat = marker.position.lat();
                     var markerLong = marker.position.lng();
-                   
+
                     if (markerName == '' || markerDescription == '' || markerCategory == '') {
                         alert("Please fill out all fields before saving!");
                     } else {
