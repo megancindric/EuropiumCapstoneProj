@@ -13,24 +13,26 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h2>Profile information will go here</h2>
-        </div>
-        <div class="col-md-6">
-            <h2>Highscores etc. can go here</h2>
+            <h2>Profile Information Placeholder</h2>
         </div>
     </div>
-    <div class="row">
-
-        <h2>Map dashboard here!</h2>
-        <div id="map"></div>
-
+    <div class="col-md-6">
+        <h2>Highscores etc. can go here</h2>
     </div>
 </div>
+<div class="row">
+
+    <h2>Map dashboard here!</h2>
+    <div id="map"></div>
+
+</div>
+<script async defer src="@APIKeys.APIURL">
+</script>
 <script>
     function initMap() {
         var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong};
         var map = new google.maps.Map(
             document.getElementById('map'), {
-                zoom: 14, center: currentLocation, mapTypeId: "roadmap" });
+                zoom: 16, center: currentLocation, mapTypeId: "roadmap" });
     }
 </script>

@@ -17,7 +17,7 @@
                 title:"Hello World!",
             });
             
-            //Content structure of info Window for the Markers
+            //Content structure of info Window for the Markersc
             var contentString = $('<div class="marker-info-win">'+
             '<div class="marker-inner-win"><span class="info-content">'+
             '<h2 class="marker-heading">Add a Marker</h2>'+
@@ -44,7 +44,7 @@
             
     
             //###### remove marker #########/
-            var removeBtn 	= contentString.find('button.remove-marker')[0];
+            var removeBtn = contentString.find('button.remove-marker')[0];
             google.maps.event.addDomListener(removeBtn, "click", function(event) {
                 marker.setMap(null);
             });

@@ -7,64 +7,100 @@
 
 <h1>Let's take a Walk!</h1>
 <div class="container-fluid">
-    <button type="button" class="btn btn-primary btn-lg">Click here to start your walk!</button>
+    <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" data-target="#collapseTest">Start your walk!</button>
+    <button type="button" class="btn btn-secondary btn-lg">End your walk!</button>
+
+    <br />
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 collapse" id="collapseTest">
             <div id="map"></div>
+        </div>
+        <div class="col-md-6">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody class="table table-primary" id="markerTableBody"></tbody>
+            </table>
         </div>
     </div>
 </div>
-<script>
-    function initMap() {
-        // The location of Uluru
-       var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong};
 
-        // The map, centered at Uluru
-        var map = new google.maps.Map(
-            document.getElementById('map'), {
-                zoom: 16, center: currentLocation
-        });
-
-        google.maps.event.addListener(map, 'rightclick', function (event) {
-            var marker = new google.maps.Marker({
-                position: event.latLng, //map Coordinates where user right clicked
-                map: map,
-                draggable: true, //set marker draggable
-                animation: google.maps.Animation.DROP, //bounce animation
-                title: "Hello World!",
-            });
-
-            //Content structure of info Window for the Markers
-            var contentString = $('<div class="marker-info-win">' +
-                '<div class="marker-inner-win"><span class="info-content">' +
-                '<h2 class="marker-heading">Add a Marker</h2>' +
-                '<p><div class="marker-edit">' +
-                '<form action="ajax-save.php" method="POST" name="SaveMarker" id="SaveMarker">' +
-                '<label for="markerName"><span>Name :</span><input type="text" name="markerName" class="save-name" placeholder="Name your Marker" maxlength="40" /></label>' +
-                '<label for="markerDescription"><span>Description :</span><textarea name="markerDescription" class="save-desc" placeholder="Enter a descrption" maxlength="150"></textarea></label>' +
-                '<label for="markerCategory"><span>Category:</span> <select name="markerCategory" class="save-type"><option value="Start">Starting Point</option></label><option value="Wildlife">Wildlife</option><option value="Landmark">Landmark</option>' +
-                '<option value="Highlight">Highlight</option><option value="End">Ending Point</option></select>' +
-                '</form>' +
-                '</div></p><button name="save-marker" class="save-marker">Save Marker</button>' +
-                '</span><button name="remove-marker" class="remove-marker" title="Remove Marker">Remove Marker</button></div></div>');
-
-            //Create an infoWindow
-            var infowindow = new google.maps.InfoWindow();
-
-            //set the content of infoWindow
-            infowindow.setContent(contentString[0]);
-
-            //add click listner to marker which will open infoWindow
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.open(map, marker); // click on marker opens info window
-            });
-
-
-            //###### remove marker #########/
-            var removeBtn = contentString.find('button.remove-marker')[0];
-            google.maps.event.addDomListener(removeBtn, "click", function (event) {
-                marker.setMap(null);
-            });
-        });
-    }
+<script src="~/Scripts/TakeAWalk.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script async defer src="@APIKeys.APIURL">
 </script>
+<script>
+ 
+        var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong };
+        var map;
+        function initMap() {
+            var map = new google.maps.Map(
+                document.getElementById('map'), {
+                zoom: 16, center: currentLocation
+            });
+            google.maps.event.addListener(map, 'rightclick', function (event) {
+
+                var marker = new google.maps.Marker({
+                    position: event.latLng, //map Coordinates where user right clicked
+                    map: map,
+                    draggable: true, //set marker draggable
+                    animation: google.maps.Animation.DROP, //bounce animation
+                });
+                //Content structure of info Window for the Markers
+                var contentString = $('<div class="marker-info-win">' +
+                    '<div class="marker-inner-win">' +
+                    '<form><div class="form-group"><input class="form-control form-control-sm" type="text" id="markerName" placeholder="Name Your Marker"></div>' +
+                    '<div class="form-group"><select class="form-control form-control-sm" id="markerCategory"><option value="" disabled selected hidden>Select a Category</option>' +
+                    '<option value="StartPoint">Starting Point</option>' +
+                    '<option value="Wildlife">Wildlife</option>' +
+                    '<option value="Landmark">Landmark</option>' +
+                    '<option value="Highlight">Highlight</option>' +
+                    '<option value="EndPoint">Ending Point</option></select></div>' +
+                    '<div class="form-group"><textarea class="form-control form-control-sm" id="markerDescription" rows="2" placeholder="Enter a Description"></textarea></div></form>' +
+                    '<button name="save-marker" class="save-marker badge badge-lrg badge-primary" title="Save this Marker">Save</button>' +
+                    '<button name="remove-marker" class="remove-marker badge badge-lrg badge-secondary" title="Remove this Marker">Delete</button></div></div>');
+
+                //Create an infoWindow
+                var infowindow = new google.maps.InfoWindow();
+
+                //set the content of infoWindow
+                infowindow.setContent(contentString[0]);
+
+                //add click listner to marker which will open infoWindow
+                google.maps.event.addListener(marker, 'click', function () {
+                    infowindow.open(map, marker); // click on marker opens info window
+                });
+
+
+                var removeBtn = contentString.find('button.remove-marker')[0];
+                //Find save button in infoWindow
+                var saveBtn = contentString.find('button.save-marker')[0];
+                google.maps.event.addDomListener(removeBtn, "click", function (event) {
+                    marker.setMap(null);
+                });
+
+                google.maps.event.addDomListener(saveBtn, "click", function (event) {
+                    var markerName = document.getElementById("markerName").value;
+                    var markerCategory = document.getElementById("markerCategory").value;
+                    var markerDescription = document.getElementById("markerDescription").value;
+                    var markerLat = marker.position.lat();
+                    var markerLong = marker.position.lng();
+                   
+                    if (markerName == '' || markerDescription == '' || markerCategory == '') {
+                        alert("Please fill out all fields before saving!");
+                    } else {
+                        createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong);
+                    }
+                });
+            });
+        }
+</script>
+
+

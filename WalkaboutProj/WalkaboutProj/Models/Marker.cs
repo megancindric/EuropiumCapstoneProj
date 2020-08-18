@@ -9,7 +9,6 @@ namespace WalkaboutProj.Models
 {
     public class Marker
     {
-        [Key]
         public int MarkerId { get; set; }
 
         [ForeignKey("RouteId")]

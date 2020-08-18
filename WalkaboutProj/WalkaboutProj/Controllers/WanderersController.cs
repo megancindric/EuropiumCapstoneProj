@@ -257,110 +257,6 @@ namespace WalkaboutProj.Controllers
             }
         }
 
-
-
-        public IActionResult CreateMarker()
-        {
-            return View();
-        }
-
-        // POST: Listing/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateMarker(Route route, [Bind("MarkerId,RouteId,MarkerName,MarkerCategory,PicturePath,MarkerDescription,IsFavorite,PointValue,MarkerLat,MarkerLong")] Marker marker)
-        {
-            marker.RouteId = route.RouteId;
-            _context.Add(marker);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult EditMarker(int id)
-        {
-            //When we create button for this, pass in ID of current marker as param
-            var markerToEdit = _context.Markers.Where(c => c.MarkerId == id).SingleOrDefault();
-            return View(markerToEdit);
-        }
-
-        // POST: Listing/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditMarker(int id, [Bind("MarkerId,RouteId,MarkerName,MarkerCategory,PicturePath,MarkerDescription,IsFavorite,PointValue,MarkerLat,MarkerLong")] Marker marker)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentWanderer = _context.Wanderers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var markerToUpdate = _context.Markers.Where(c => c.MarkerId == id).SingleOrDefault();
-            try
-            {
-                markerToUpdate.MarkerName = marker.MarkerName;
-                markerToUpdate.MarkerDescription = marker.MarkerDescription;
-                markerToUpdate.MarkerCategory = marker.MarkerCategory;
-                //Should not be able to change other parts of route
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MarkerExists(marker.MarkerId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction("Index");
-        }
-
-        // GET: Traders/Delete/5
-        public IActionResult DeleteMarker(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var marker = _context.Markers
-                .Include(c => c.MarkerId)
-                .FirstOrDefault(m => m.MarkerId == id);
-            if (marker == null)
-            {
-                return NotFound();
-            }
-
-            return View(marker);
-        }
-
-        // POST: Traders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteMarkerConfirmed(int id)
-        {
-            var marker = _context.Markers.FirstOrDefault(m => m.MarkerId == id);
-            _context.Markers.Remove(marker);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult MarkerDetails(int? id)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentWanderer = _context.Wanderers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var marker = _context.Markers.Where(m => m.RouteId == id).FirstOrDefault();
-            if (marker == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return View(marker);
-            }
-        }
-
         private bool WandererExists(int id)
         {
             return _context.Wanderers.Any(e => e.WandererId == id);
@@ -417,9 +313,66 @@ namespace WalkaboutProj.Controllers
             viewModel.Wanderer = _context.Wanderers.Where(s => s.IdentityUserId == userId).FirstOrDefault();
             //viewModel.MyRoutes = _context.Routes.Where(r => r.WandererId == viewModel.Wanderer.WandererId).ToList();
             viewModel = GeocodeRoute(viewModel);
-
             return View(viewModel);
         }
-
+        // GET a marker
+        [HttpGet]
+        public IActionResult GetMarkers()
+        {
+            //get entire list of markers in DB
+            IList<Marker> markers = _context.Markers.ToList();
+            return Ok(markers);
+        }
+        // GET specific marker
+        [HttpGet("{id}")]
+        public IActionResult Getmarker(int id)
+        {
+            // Retrieve movie by id from db logic
+            // return Ok(movie);
+            var currentMarker = _context.Markers.Where(s => s.MarkerId == id).SingleOrDefault();
+            if (currentMarker == null)
+            {
+                return NotFound();
+            }
+            return Ok(currentMarker);
+        }
+        // POST marker
+        [HttpPost]
+        public ActionResult PostMarker([FromBody] Marker marker)
+        {
+            _context.Add(marker);
+            _context.SaveChanges();
+            return Ok();
+        }
+        // PUT marker
+        [HttpPut]
+        public IActionResult PutMarker([FromBody] Marker marker)
+        {
+            var markerToUpdate = _context.Markers.Where(s => s.MarkerId == marker.MarkerId).SingleOrDefault();
+            if (markerToUpdate == null)
+            {
+                return NotFound();
+            }
+            markerToUpdate.MarkerName = marker.MarkerName;
+            markerToUpdate.MarkerDescription = marker.MarkerDescription;
+            markerToUpdate.MarkerCategory = marker.MarkerCategory;
+            markerToUpdate.PicturePath = marker.PicturePath;
+            _context.Update(markerToUpdate);
+            _context.SaveChanges();
+            return Ok();
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMarker(int id)
+        {
+            // Delete movie from db logic
+            var markerToDelete = _context.Markers.Where(s => s.MarkerId == id).SingleOrDefault();
+            if (markerToDelete == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(markerToDelete);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
