@@ -324,10 +324,10 @@ namespace WalkaboutProj.Controllers
             return Ok(markers);
         }
 
-        [HttpGet("{routeId}")]
-        public IActionResult GetRouteMarkers(int routeId)
+        [HttpGet]
+        public IActionResult GetRouteMarkers(int RouteId)
         {
-            IList<Marker> routeMarkers = _context.Markers.Where(s => s.RouteId == routeId).ToList();
+            IList<Marker> routeMarkers = _context.Markers.Where(s => s.RouteId == RouteId).ToList();
             return Ok(routeMarkers);
 
         }

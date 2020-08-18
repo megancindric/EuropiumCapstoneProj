@@ -31,14 +31,12 @@ function createMarkerObject(markerName, markerCategory, markerDescription, marke
     }
     return markerInfo;
 }
-function getRouteMarkers() {
+function getRouteMarkers(RouteId) {
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
-            url: '/Wanderers/GetAllMarkers',
-            contentType: "application/json; charset=utf-8",
-
-            dataType: 'json',
+            url: '/Wanderers/GetRouteMarkers',
+            data: { RouteId: RouteId },
             success: function () {
                 $('#markerTableBody').html(``);
             },
@@ -63,12 +61,12 @@ function addMarkersToTable(data) {
     }
 }
 
-function editSingleMarker(markerId) {
+function editSingleMarker(MarkerId) {
     $(document).ready(function () {
         $ajax({
             type: 'GET',
-            url: '/Wanderers/GetMarker/' + markerId,
-            dataType: 'json',
+            data: { MarkerId: MarkerId },
+            url: '/Wanderers/GetMarker',
         }).then(function (data){
             $('#hiddenMarkerId').val(data['markerId'])
             $('#hiddenRouteId').val(data['routeId'])
