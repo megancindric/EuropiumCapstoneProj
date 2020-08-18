@@ -17,6 +17,38 @@
     });
 }
 
+function updateMarker() {
+    var updatedMarker = {
+        "MarkerId": parseInt(document.getElementById('hiddenMarkerId').value),
+        "RouteId": parseInt(document.getElementById('hiddenRouteId').value),
+        "MarkerName": document.getElementById('editMarkerName').value,
+        "MarkerCategory": document.getElementById('editMarkerCategory').value,
+        "PicturePath": document.getElementById('hiddenPicturePath').value,
+        "MarkerDescription": document.getElementById('editMarkerDescription').value,
+        "IsFavorite": JSON.parse(document.getElementById('hiddenIsFavorite').value),
+        "PointValue": parseFloat(document.getElementById('hiddenPointValue').value),
+        "MarkerLat": parseFloat(document.getElementById('hiddenMarkerLat').value),
+        "MarkerLong": parseFloat(document.getElementById('hiddenMarkerLong').value),
+    };
+    $(document).ready(function () {
+        $.ajax({
+            type: 'PUT',
+            url: '/Wanderers/PutMarker',
+            data: JSON.stringify(updatedMarker),
+            contentType: "application/json; charset=utf-8",
+            success: function () {
+                alert("Your marker has been updated!");
+                $(document.getElementById('edit-marker').reset());
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("We hit a problem with PUTTING");
+            }
+        }).then(function () {
+            getRouteMarkers(updatedMarker.RouteId);
+        });
+    });
+}
+
 function createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong) {
     var markerInfo = {
         "RouteId": 1,
@@ -63,10 +95,16 @@ function addMarkersToTable(data) {
 
 function editSingleMarker(MarkerId) {
     $(document).ready(function () {
-        $ajax({
+        $.ajax({
             type: 'GET',
             data: { MarkerId: MarkerId },
             url: '/Wanderers/GetMarker',
+            success: function () {
+                alert("Got the marker!");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("We hit a problem with GETTING");
+            }
         }).then(function (data){
             $('#hiddenMarkerId').val(data['markerId'])
             $('#hiddenRouteId').val(data['routeId'])
@@ -83,37 +121,7 @@ function editSingleMarker(MarkerId) {
     })
 }
 
-function updateMarker() {
-    var markerToUpdate = {
-        "MarkerId": parseInt(document.getElementById('hiddenMarkerId').value),
-        "RouteId": parseInt(document.getElementById('hiddenRouteId').value),
-        "MarkerName": document.getElementById('editMarkerName').value,
-        "MarkerCategory": document.getElementById('editMarkerCategory').value,
-        "PicturePath": document.getElementById('hiddenPicturePath').value,
-        "MarkerDescription": document.getElementById('editMarkerDesription').value,
-        "IsFavorite": document.getElementById('hiddenIsFavorite').value,
-        "PointValue": parseInt(document.getElementById('hiddenPointValue').value),
-        "MarkerLat": parseInt(document.getElementById('hiddenMarkerLat').value),
-        "MarkerLong": parseInt(document.getElementById('hiddenMarkerLong').value),
-    };
-    $(document).ready(function () {
-        $ajax({
-            url: '/Wanderers/PutMarker',
-            type: 'PUT',
-            data: JSON.stringify(markerToUpdate),
-            contentType: 'application/json; charset=utf-8',
-            success: function () {
-                alert("Your marker has been updated!");
-                $(document.getElementById('edit-marker').reset());
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert("We hit a problem with PUTTING");
-            }
-        }).then(function () {
-            getRouteMarkers();
-        });
-    });
-}
+
 
 function removeMarker(MarkerId) {
 

@@ -332,12 +332,12 @@ namespace WalkaboutProj.Controllers
 
         }
         // GET specific marker
-        [HttpGet("{id}")]
-        public IActionResult Getmarker(int id)
+        [HttpGet]
+        public IActionResult Getmarker(int MarkerId)
         {
             // Retrieve movie by id from db logic
             // return Ok(movie);
-            var currentMarker = _context.Markers.Where(s => s.MarkerId == id).SingleOrDefault();
+            var currentMarker = _context.Markers.Where(s => s.MarkerId == MarkerId).SingleOrDefault();
             if (currentMarker == null)
             {
                 return NotFound();
@@ -354,17 +354,17 @@ namespace WalkaboutProj.Controllers
         }
         // PUT marker
         [HttpPut]
-        public IActionResult PutMarker([FromBody] Marker marker)
+        public ActionResult PutMarker([FromBody] Marker updatedMarker)
         {
-            var markerToUpdate = _context.Markers.Where(s => s.MarkerId == marker.MarkerId).SingleOrDefault();
+            var markerToUpdate = _context.Markers.Where(s => s.MarkerId == updatedMarker.MarkerId).FirstOrDefault();
             if (markerToUpdate == null)
             {
                 return NotFound();
             }
-            markerToUpdate.MarkerName = marker.MarkerName;
-            markerToUpdate.MarkerDescription = marker.MarkerDescription;
-            markerToUpdate.MarkerCategory = marker.MarkerCategory;
-            markerToUpdate.PicturePath = marker.PicturePath;
+            markerToUpdate.MarkerName = updatedMarker.MarkerName;
+            markerToUpdate.MarkerDescription = updatedMarker.MarkerDescription;
+            markerToUpdate.MarkerCategory = updatedMarker.MarkerCategory;
+            markerToUpdate.PicturePath = updatedMarker.PicturePath;
             _context.Update(markerToUpdate);
             _context.SaveChanges();
             return Ok();
