@@ -88,7 +88,7 @@ function addMarkersToTable(data) {
                     <td>${data[i].markerCategory}</td>
                     <td>${data[i].markerDescription}</td>
                     <td><button type="submit" class="btn btn-outline-danger"onclick="editSingleMarker(${data[i].markerId})">Edit</button>
-                    <td><button type="submit" class="btn btn-outline-danger"onclick="removeMarker(${data[i].markerId})">Delete</button></tr>
+                    <td><button type="submit" class="btn btn-outline-danger"onclick="removeMarker(${data[i].markerId, data[i].routeId})">Delete</button></tr>
                     </tr>`)
     }
 }
@@ -123,8 +123,8 @@ function editSingleMarker(MarkerId) {
 
 
 
-function removeMarker(MarkerId) {
-
+function removeMarker(MarkerId, RouteId) {
+    var RouteId = RouteId;
         //will need to remove from DB AND map
         $.ajax({
             type: "DELETE",
@@ -136,6 +136,8 @@ function removeMarker(MarkerId) {
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert("We hit a problem...");
-            }
-            });
+            }.then(function (RouteId) {
+                addMarkersToTable(RouteId);
+            })
+        });
     }

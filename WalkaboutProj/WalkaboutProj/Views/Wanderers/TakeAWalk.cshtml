@@ -110,8 +110,8 @@
                     '<option value="Highlight">Highlight</option>' +
                     '<option value="EndPoint">Ending Point</option></select></div>' +
                     '<div class="form-group"><textarea class="form-control form-control-sm" id="markerDescription" rows="2" placeholder="Enter a Description"></textarea></div></form>' +
-                    '<button name="save-marker" class="save-marker badge badge-lrg badge-primary" title="Save this Marker">Save</button>' +
-                    '<button name="remove-marker" class="remove-marker badge badge-lrg badge-secondary" title="Remove this Marker">Delete</button></div></div>');
+                    '<button name="save-marker" class="save-marker badge badge-lrg badge-primary" id="saveButton" title="Save this Marker">Save</button>' +
+                    '<button name="remove-marker" class="remove-marker badge badge-lrg badge-secondary" id="deleteButton" title="Remove this Marker">Delete</button></div></div>');
 
                 //Create an infoWindow
                 var infowindow = new google.maps.InfoWindow();
@@ -129,10 +129,12 @@
                 //Find save button in infoWindow
                 var saveBtn = contentString.find('button.save-marker')[0];
                 google.maps.event.addDomListener(removeBtn, "click", function (event) {
-                    removeMarker(marker);
+                    marker.setMap(null);
                 });
 
                 google.maps.event.addDomListener(saveBtn, "click", function (event) {
+                    saveBtn.style.display = "none";
+                    removeBtn.style.display = "none";
                     var markerName = document.getElementById("markerName").value;
                     var markerCategory = document.getElementById("markerCategory").value;
                     var markerDescription = document.getElementById("markerDescription").value;
