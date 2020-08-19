@@ -14,12 +14,38 @@
     <div class="row">
         <div class="col-md-6 collapse" id="createMarkersMap">
          @*if marker.category == startingpoint/endingpoint Will need to query all route markers to see if start point or end point is saved, throw error if there is (alert)*@
-            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" onclick="endYourWalk()" data-target="#createMarkersMap #updateRouteButton">End your walk!</button>
+            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" onclick="endYourWalk()" data-target="#createMarkersMap #createRouteMap #routeDetails">End your walk!</button>
             <div id="map"></div>
         </div>
         <div class="col-md-6 collapse" id="createRouteMap">
-            <div id="map"></div>
+            <div id="map2"></div>
         </div>
+        <div class="col-md-6 collapse" id="routeDetails">
+            <form id="edit-route">
+                <h3>Create your Route</h3>
+                <div class="form-group">
+                    <input id="hiddenRouteId" name="hiddenRouteId" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenWandererId" name="hiddenWandererId" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenTotalTime" name="hiddenTotalTime" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="hiddenTotalPoints" name="hiddenTotalPoints" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input id="routeName" name="routeName" placeholder="Name your Route" />
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control form-control-sm" id="editRouteDescription" rows="2" placeholder="Enter a Description">
+                 </textarea>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateRoute()">Save this Route:</button>
+            </form>
+        </div>
+
         <div class="col-md-6">
             <table class="table table-primary">
                 <thead>
@@ -33,8 +59,6 @@
                 </thead>
                 <tbody class="table table-primary" id="markerTableBody"></tbody>
             </table>
-            <button type="button" class="btn btn-secondary btn-lg collapse" id="updateRouteButton" onclick="" data-target="#createRouteMap">Click here to make your route!</button>
-
         </div>
     </div>
     <div class="row">
@@ -93,7 +117,8 @@
 
 <script>
         var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong };
-        var map;
+    var map;
+    var map2;
         function initMap() {
             var map = new google.maps.Map(
                 document.getElementById('map'), {
@@ -156,7 +181,66 @@
                     }
                 });
             });
+            function initMap2(result) {
+                const directionsService = new google.maps.DirectionsService();
+                const directionsRenderer = new google.maps.DirectionsRenderer();
+                const map = new google.maps.Map(
+                    document.getElementById('map2'), {
+                    zoom: 16, center: currentLocation
+                });
+            }
         }
+
+   
 </script>
+
+<script>
+        function createDirections(result) {
+            directionsRenderer.setMap(map2);
+            const waypts = [];
+            let resultLength = result.Length;
+            var startPoint = {
+                location: { lat: result[0].markerLat, lng: result[0].markerLong }
+            }
+            var endPoint = {
+                location: { lat: result[resultLength].markerLat, lng: result[resultLength].markerLong }
+            }
+            for (let i = 1; i < resultLength - 1; i++) {
+                waypts.push({
+                    location: { lat: result[i].markerLat, lng: result[i].markerLong },
+                    stopover: true
+                });
+            }
+            directionsService.route(
+                {
+                    origin: startPoint,
+                    destination: endPoint,
+                    waypoints: waypts,
+                    optimizeWaypoints: true,
+                    travelMode: goole.maps.TravelMode.WALKING
+                },
+                (response, status) => {
+                    if (status === "OK") {
+                        alert("Omg it worked?");
+
+                        for (let i = 0; i < route.legs.length; i++) {
+                            const routeSegment = i + 1;
+                            summaryPanel.innerHTML +=
+                                "<b>Route Segment: " + routeSegment + "</b><br>";
+                            summaryPanel.innerHTML += route.legs[i].start_address + " to ";
+                            summaryPanel.innerHTML += route.legs[i].end_address + "<br>";
+                            summaryPanel.innerHTML +=
+                                route.legs[i].distance.text + "<br><br>";
+                        }
+                    } else {
+                        window.alert("Directions request failed");
+                    }
+                }
+            );        }
+       
+    
+//When updating route object we will need to take NOW'S datetime and subtract TotalTimeMilliseconds, then
+</script>
+
 
 

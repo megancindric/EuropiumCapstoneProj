@@ -448,5 +448,17 @@ namespace WalkaboutProj.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        [HttpGet]
+        public IActionResult PrepareRouteWaypoints(int RouteId)
+        {
+            Marker routeStart = _context.Markers.Where(s => s.RouteId == RouteId && s.MarkerCategory == "StartPoint").FirstOrDefault();
+            Marker routeEnd = _context.Markers.Where(s => s.RouteId == RouteId && s.MarkerCategory == "EndPoint").FirstOrDefault();
+            IList<Marker> routeMarkers = _context.Markers.Where(s => s.RouteId == RouteId && (s.MarkerCategory == "Wildlife" || s.MarkerCategory == "Landmark" || s.MarkerCategory == "Highlight")).ToList();
+            routeMarkers.Insert(0, routeStart);
+            routeMarkers.Add(routeEnd);
+            return Ok(routeMarkers);
+
+        }
     }
 }

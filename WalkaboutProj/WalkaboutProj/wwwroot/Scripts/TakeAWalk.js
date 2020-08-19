@@ -177,7 +177,6 @@ function editSingleMarker(MarkerId) {
 
 function removeMarker(MarkerId) {
     var RouteId = RouteId;
-        //will need to remove from DB AND map
         $.ajax({
             type: "DELETE",
             url: '/Wanderers/DeleteMarker',
@@ -243,6 +242,26 @@ function initialRouteGet(dateTime) {
 }
 
 function endYourWalk() {
+    prepareRouteWaypoints();
+
     //Will have ajax call to get all markers, run confirmation check, 
 }
-//When updating route object we will need to take NOW'S datetime and subtract TotalTimeMilliseconds, then 
+function prepareRouteWaypoints() {
+    var RouteId = document.getElementById('currentRouteId').value;
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Wanderers/PrepareRouteWaypoints',
+            data: { RouteId: RouteId },
+            success: function (result) {
+                createDirections(result);
+                //Will be returning a list of all waypoints.  Index 0 is origin, last index is endpoint.
+                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("We hit a problem with GETTING ALL WAYPOINTS");
+            }
+        })
+    })
+}
+
