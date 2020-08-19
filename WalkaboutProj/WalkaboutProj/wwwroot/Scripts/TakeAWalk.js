@@ -1,20 +1,71 @@
 ﻿function createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong, routeId) {
     var newMarker = createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong, routeId);
-    $.ajax({
-        type: 'POST',
-        url: '/Wanderers/PostMarker',
-        data: JSON.stringify(newMarker),
-        contentType: 'application/json; charset=utf-8',
-        success: function () {
-            alert("Your marker has been saved!")
-            marker.setDraggable(false); //set marker to fixed
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alert("We hit a problem with POSTING"); //throw any errors
+    if (markerCategory == "StartPoint" || markerCategory == "EndPoint") {
+        checkForDuplicates(marker,newMarker);
+    }
+    else {
+        $.ajax({
+            type: 'POST',
+            url: '/Wanderers/PostMarker',
+            data: JSON.stringify(newMarker),
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                alert("Your marker has been saved!")
+                marker.setDraggable(false); //set marker to fixed
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("We hit a problem with POSTING"); //throw any errors
+            }
+        }).then(function () {
+            getRouteMarkers();
+        });
+    }
+   
+}
+//this one gets all markers then passes them into 
+function checkForDuplicates(marker,newMarker) {
+    var RouteId = document.getElementById('currentRouteId').value;
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Wanderers/GetRouteMarkers',
+            data: { RouteId: RouteId },
+            success: function (data) {
+                var markerExists = markerCategoryCheck(newMarker, data);
+                if (!markerExists) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Wanderers/PostMarker',
+                        data: JSON.stringify(newMarker),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function () {
+                            alert("Your marker has been saved!")
+                            marker.setDraggable(false); //set marker to fixed
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert("We hit a problem with POSTING"); //throw any errors
+                        }
+                    }).then(function () {
+                        getRouteMarkers();
+                    });
+                }
+                else {
+                    alert("Whoops!  Make sure you only have 1 start/end point!")
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("We hit a problem with CHECKING FOR DUPLICATES");
+            }
+        })
+    })
+}
+function markerCategoryCheck(newMarker, data) {
+    var currentMarkerCategory = newMarker.MarkerCategory;
+    for (var i = 0; i < data.length; i++)
+        if (data[i].markerCategory == currentMarkerCategory) {
+            return true;
         }
-    }).then(function () {
-        getRouteMarkers();
-    });
+    return false;
 }
 
 function updateMarker() {
@@ -189,5 +240,9 @@ function initialRouteGet(dateTime) {
             $('#hiddenRouteId').val(data['RouteId'])
         })
     })
+}
+
+function endYourWalk() {
+    //Will have ajax call to get all markers, run confirmation check, 
 }
 //When updating route object we will need to take NOW'S datetime and subtract TotalTimeMilliseconds, then 

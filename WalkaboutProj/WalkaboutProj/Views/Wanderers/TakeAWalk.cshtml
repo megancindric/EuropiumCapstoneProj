@@ -13,7 +13,8 @@
     <br />
     <div class="row">
         <div class="col-md-6 collapse" id="createMarkersMap">
-            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" onclick="getRouteMarkers()" data-target="#createMarkersMap #updateRouteButton">End your walk!</button>
+         @*if marker.category == startingpoint/endingpoint Will need to query all route markers to see if start point or end point is saved, throw error if there is (alert)*@
+            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" onclick="endYourWalk()" data-target="#createMarkersMap #updateRouteButton">End your walk!</button>
             <div id="map"></div>
         </div>
         <div class="col-md-6 collapse" id="createRouteMap">
@@ -87,7 +88,6 @@
 <script src="~/Scripts/TakeAWalk.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script async defer src="@APIKeys.APIURL">
-
 </script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
