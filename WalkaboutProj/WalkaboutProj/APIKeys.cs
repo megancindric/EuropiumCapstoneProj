@@ -10,5 +10,8 @@ namespace WalkaboutProj
         public static readonly string APIURL = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDWabab5TRKBTfCGXR7kiztxG2jqP6PNrs&callback=initMap";
 
         public static readonly string APIKEY = "AIzaSyDWabab5TRKBTfCGXR7kiztxG2jqP6PNrs";
+
+        public static readonly string APIDIRURL = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDWabab5TRKBTfCGXR7kiztxG2jqP6PNrs&callback=initDirMap";
+
     }
 }

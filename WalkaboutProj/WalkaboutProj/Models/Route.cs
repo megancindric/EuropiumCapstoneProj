@@ -22,22 +22,13 @@ namespace WalkaboutProj.Models
         [Display(Name = "Route Description")]
         public string RouteDescription { get; set; }
 
-        [Display(Name = "Start Time")]
-        public DateTime StartTime { get; set; }
-
-        [Display(Name = "End Time")]
-        public DateTime EndTime { get; set; }
+        [Display(Name = "Total Time")]
+        public float TotalTimeMilliseconds { get; set; }
 
         [Display(Name = "Total Distance")]
         public double TotalDistance { get; set; }
 
         [Display(Name = "Total Points")]
         public double TotalPoints { get; set; }
-
-        [Display(Name = "Start Latitude")]
-        public double LocationLat { get; set; }
-
-        [Display(Name = "Start Longitude")]
-        public double LocationLong { get; set; }
     }
 }

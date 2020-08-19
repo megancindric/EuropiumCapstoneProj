@@ -13,7 +13,7 @@
             alert("We hit a problem with POSTING"); //throw any errors
         }
     }).then(function () {
-        getRouteMarkers(newMarker.RouteId);
+        getRouteMarkers();
     });
 }
 
@@ -44,7 +44,7 @@ function updateMarker() {
                 alert("We hit a problem with PUTTING");
             }
         }).then(function () {
-            getRouteMarkers(updatedMarker.RouteId);
+            getRouteMarkers();
         });
     });
 }
@@ -63,7 +63,8 @@ function createMarkerObject(markerName, markerCategory, markerDescription, marke
     }
     return markerInfo;
 }
-function getRouteMarkers(RouteId) {
+function getRouteMarkers() {
+    var RouteId = document.getElementById('currentRouteId').value;
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
@@ -140,4 +141,54 @@ function removeMarker(MarkerId, RouteId) {
                 addMarkersToTable(RouteId);
             })
         });
+}
+
+function createNewRoute(WandererId) {
+    var dateTime = Date.now();
+    var newRoute = createRouteObject(WandererId, dateTime);
+    $.ajax({
+        type: 'POST',
+        url: '/Wanderers/PostRoute',
+        data: JSON.stringify(newRoute),
+        contentType: 'application/json; charset=utf-8',
+        success: function (result) {
+            var currentRouteId = document.getElementById('currentRouteId');
+            currentRouteId.value = result.routeId;
+            alert("Your route has been created!!")
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert("We hit a problem with POSTING"); //throw any errors
+        }
+    }).then(function () {
+    });
+}
+
+function createRouteObject(WandererId, dateTime) {
+    var routeInfo = {
+        "WandererId": WandererId,
+        "RouteName": "New Route",
+        "RouteDescription": "Enter a description for your route",
+        "TotalDistance": 0,
+        "TotalTimeMilliseconds": dateTime,
     }
+    return routeInfo;
+}
+
+function initialRouteGet(dateTime) {
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Wanderers/InitialRouteGet',
+            data: { TotalTimeMilliseconds: dateTime },
+            success: function () {
+                alert("initial GET successful");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("We hit a problem with GETTING");
+            }
+        }).then(function (data) {
+            $('#hiddenRouteId').val(data['RouteId'])
+        })
+    })
+}
+//When updating route object we will need to take NOW'S datetime and subtract TotalTimeMilliseconds, then 

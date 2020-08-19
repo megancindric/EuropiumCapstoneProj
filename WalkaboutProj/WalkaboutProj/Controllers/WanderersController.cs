@@ -382,5 +382,71 @@ namespace WalkaboutProj.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        [HttpPost]
+        public ActionResult PostRoute([FromBody] Route route)
+        {
+            _context.Add(route);
+            _context.SaveChanges();
+            return Json(new { route.RouteId });
+        }
+
+        // GET specific marker
+        [HttpGet]
+        public IActionResult GetRoute(int RouteId)
+        {
+            // Retrieve movie by id from db logic
+            // return Ok(movie);
+            var currentRoute = _context.Routes.Where(s => s.RouteId == RouteId).SingleOrDefault();
+            if (currentRoute == null)
+            {
+                return NotFound();
+            }
+            return Ok(currentRoute);
+        }
+
+        // GET specific marker
+        [HttpGet]
+        public IActionResult InitialRouteGet(float dateTime)
+        {
+            // Retrieve movie by id from db logic
+            // return Ok(movie);
+            var currentRoute = _context.Routes.Where(s => s.TotalTimeMilliseconds == dateTime).SingleOrDefault();
+            if (currentRoute == null)
+            {
+                return NotFound();
+            }
+            return Ok(currentRoute);
+        }
+
+        [HttpPut]
+        public ActionResult PutRoute([FromBody] Route updatedRoute)
+        {
+            var routeToUpdate = _context.Routes.Where(s => s.RouteId == updatedRoute.RouteId).FirstOrDefault();
+            if (routeToUpdate == null)
+            {
+                return NotFound();
+            }
+            routeToUpdate.RouteName = routeToUpdate.RouteName;
+            routeToUpdate.RouteDescription = routeToUpdate.RouteDescription;
+            routeToUpdate.TotalDistance = routeToUpdate.TotalDistance;
+            routeToUpdate.TotalPoints = updatedRoute.TotalPoints;
+            _context.Update(routeToUpdate);
+            _context.SaveChanges();
+            return Ok();
+        }
+        [HttpDelete]
+        public IActionResult DeleteRoute(int RouteId)
+        {
+            // Delete movie from db logic
+            var routeToDelete = _context.Routes.Where(s => s.RouteId == RouteId).FirstOrDefault();
+            if (routeToDelete == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(routeToDelete);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
