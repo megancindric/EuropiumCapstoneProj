@@ -14,10 +14,10 @@
     <div class="row">
         <div class="col-md-6 collapse" id="createMarkersMap">
          @*if marker.category == startingpoint/endingpoint Will need to query all route markers to see if start point or end point is saved, throw error if there is (alert)*@
-            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" onclick="endYourWalk()" data-target="#createMarkersMap #createRouteMap #routeDetails">End your walk!</button>
+            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" data-target="#routeDetails">End your walk!</button>
             <div id="map"></div>
         </div>
-        <div class="col-md-6 collapse" id="createRouteMap">
+        <div class="col-md-6">
             <div id="map2"></div>
         </div>
         <div class="col-md-6 collapse" id="routeDetails">
@@ -108,22 +108,32 @@
         </div>
     </div>
 </div>
-
-<script src="~/Scripts/TakeAWalk.js"></script>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script async defer src="@APIKeys.APIURL">
 </script>
+<script src="~/Scripts/TakeAWalk.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 <script>
-        var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong };
+    var currentLocation = { lat: @Model.WandererLat, lng: @Model.WandererLong };
     var map;
     var map2;
-        function initMap() {
+    function initMap() {
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer();
             var map = new google.maps.Map(
                 document.getElementById('map'), {
                 zoom: 16, center: currentLocation
             });
+            var map2 = new google.maps.Map(
+                document.getElementById('map2'), {
+                zoom: 16, center: currentLocation
+            });
+        document.getElementById("endYourWalk").addEventListener("click", () => {
+            endYourWalk();
+        })
+
             google.maps.event.addListener(map, 'rightclick', function (event) {
 
                 var marker = new google.maps.Marker({
@@ -181,66 +191,10 @@
                     }
                 });
             });
-            function initMap2(result) {
-                const directionsService = new google.maps.DirectionsService();
-                const directionsRenderer = new google.maps.DirectionsRenderer();
-                const map = new google.maps.Map(
-                    document.getElementById('map2'), {
-                    zoom: 16, center: currentLocation
-                });
-            }
-        }
 
-   
+    }   
 </script>
 
-<script>
-        function createDirections(result) {
-            directionsRenderer.setMap(map2);
-            const waypts = [];
-            let resultLength = result.Length;
-            var startPoint = {
-                location: { lat: result[0].markerLat, lng: result[0].markerLong }
-            }
-            var endPoint = {
-                location: { lat: result[resultLength].markerLat, lng: result[resultLength].markerLong }
-            }
-            for (let i = 1; i < resultLength - 1; i++) {
-                waypts.push({
-                    location: { lat: result[i].markerLat, lng: result[i].markerLong },
-                    stopover: true
-                });
-            }
-            directionsService.route(
-                {
-                    origin: startPoint,
-                    destination: endPoint,
-                    waypoints: waypts,
-                    optimizeWaypoints: true,
-                    travelMode: goole.maps.TravelMode.WALKING
-                },
-                (response, status) => {
-                    if (status === "OK") {
-                        alert("Omg it worked?");
-
-                        for (let i = 0; i < route.legs.length; i++) {
-                            const routeSegment = i + 1;
-                            summaryPanel.innerHTML +=
-                                "<b>Route Segment: " + routeSegment + "</b><br>";
-                            summaryPanel.innerHTML += route.legs[i].start_address + " to ";
-                            summaryPanel.innerHTML += route.legs[i].end_address + "<br>";
-                            summaryPanel.innerHTML +=
-                                route.legs[i].distance.text + "<br><br>";
-                        }
-                    } else {
-                        window.alert("Directions request failed");
-                    }
-                }
-            );        }
-       
-    
-//When updating route object we will need to take NOW'S datetime and subtract TotalTimeMilliseconds, then
-</script>
 
 
 

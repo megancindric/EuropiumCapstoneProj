@@ -265,3 +265,39 @@ function prepareRouteWaypoints() {
     })
 }
 
+function createDirections(result) {
+    directionsRenderer.setMap(map2);
+    const waypts = [];
+    let resultLength = result.Length;
+    var startPoint = {
+        location: { lat: result[0].markerLat, lng: result[0].markerLong }
+    }
+    var endPoint = {
+        location: { lat: result[resultLength].markerLat, lng: result[resultLength].markerLong }
+    }
+    for (let i = 1; i < resultLength - 1; i++) {
+        waypts.push({
+            location: { lat: result[i].markerLat, lng: result[i].markerLong },
+            stopover: true
+        });
+    }
+    directionsService.route(
+        {
+            origin: startPoint,
+            destination: endPoint,
+            waypoints: waypts,
+            optimizeWaypoints: true,
+            travelMode: goole.maps.TravelMode.WALKING
+        },
+        (response, status) => {
+            if (status === "OK") {
+                alert("Omg it worked?");
+
+
+            }
+            else {
+                alert("Directions request failed");
+            }
+        }
+    );
+}
