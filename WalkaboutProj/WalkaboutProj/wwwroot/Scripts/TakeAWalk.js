@@ -1,5 +1,5 @@
-﻿function createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong) {
-    var newMarker = createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong);
+﻿function createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong, routeId) {
+    var newMarker = createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong, routeId);
     $.ajax({
         type: 'POST',
         url: '/Wanderers/PostMarker',
@@ -49,10 +49,10 @@ function updateMarker() {
     });
 }
 
-function createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong) {
+function createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong, routeId) {
     var markerInfo = {
-        "RouteId": 1,
         "MarkerName": markerName,
+        "RouteId" : routeId,
         "MarkerCategory": markerCategory,
         "PicturePath": "",
         "MarkerDescription": markerDescription,

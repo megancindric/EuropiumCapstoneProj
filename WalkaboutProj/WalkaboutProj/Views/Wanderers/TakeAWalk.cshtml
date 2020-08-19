@@ -146,13 +146,14 @@
                     var markerName = document.getElementById("markerName").value;
                     var markerCategory = document.getElementById("markerCategory").value;
                     var markerDescription = document.getElementById("markerDescription").value;
+                    var routeId = parseInt(document.getElementById('currentRouteId').value);
                     var markerLat = marker.position.lat();
                     var markerLong = marker.position.lng();
 
                     if (markerName == '' || markerDescription == '' || markerCategory == '') {
                         alert("Please fill out all fields before saving!");
                     } else {
-                        createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong);
+                        createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong, routeId);
                     }
                 });
             });
