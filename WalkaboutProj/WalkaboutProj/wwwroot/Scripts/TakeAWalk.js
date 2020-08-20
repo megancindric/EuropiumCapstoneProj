@@ -253,8 +253,8 @@ function prepareRouteWaypoints() {
             type: 'GET',
             url: '/Wanderers/PrepareRouteWaypoints',
             data: { RouteId: RouteId },
-            success: function (result) {
-                createDirections(result);
+            success: function (data) {
+                parseWaypoints(data);
                 //Will be returning a list of all waypoints.  Index 0 is origin, last index is endpoint.
                 
             },
@@ -265,39 +265,20 @@ function prepareRouteWaypoints() {
     })
 }
 
-function createDirections(result) {
-    directionsRenderer.setMap(map2);
-    const waypts = [];
-    let resultLength = result.Length;
+function parseWaypoints(data) {
+    var waypts = [];
+    var resultLength = data.length - 1;
     var startPoint = {
-        location: { lat: result[0].markerLat, lng: result[0].markerLong }
+        location: { lat: data[0].markerLat, lng: data[0].markerLong }
     }
     var endPoint = {
-        location: { lat: result[resultLength].markerLat, lng: result[resultLength].markerLong }
+        location: { lat: data[resultLength].markerLat, lng: data[resultLength].markerLong }
     }
-    for (let i = 1; i < resultLength - 1; i++) {
+    for (let i = 1; i < resultLength; i++) {
         waypts.push({
-            location: { lat: result[i].markerLat, lng: result[i].markerLong },
+            location: { lat: data[i].markerLat, lng: data[i].markerLong },
             stopover: true
         });
     }
-    directionsService.route(
-        {
-            origin: startPoint,
-            destination: endPoint,
-            waypoints: waypts,
-            optimizeWaypoints: true,
-            travelMode: goole.maps.TravelMode.WALKING
-        },
-        (response, status) => {
-            if (status === "OK") {
-                alert("Omg it worked?");
-
-
-            }
-            else {
-                alert("Directions request failed");
-            }
-        }
-    );
+    createDirections(startPoint, endPoint, waypts);
 }
