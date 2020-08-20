@@ -1,5 +1,6 @@
 ﻿function createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong, routeId) {
     var newMarker = createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong, routeId);
+    var iconURL = icons[markerCategory].icon;
     if (markerCategory == "StartPoint" || markerCategory == "EndPoint") {
         checkForDuplicates(marker,newMarker);
     }
@@ -12,6 +13,7 @@
             success: function () {
                 alert("Your marker has been saved!")
                 marker.setDraggable(false); //set marker to fixed
+                marker.setIcon(iconURL);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert("We hit a problem with POSTING"); //throw any errors
@@ -195,6 +197,7 @@ function removeMarker(MarkerId) {
 function createNewRoute(WandererId) {
     var dateTime = Date.now();
     var newRoute = createRouteObject(WandererId, dateTime);
+
     $.ajax({
         type: 'POST',
         url: '/Wanderers/PostRoute',
@@ -237,14 +240,17 @@ function initialRouteGet(dateTime) {
             }
         }).then(function (data) {
             $('#hiddenRouteId').val(data['RouteId'])
+            $('#totalTime').val(data[TotalTimeMilliseconds])
+            //Will need to dynamically add points value in as well
+            //assign route edit values here
         })
     })
 }
 
 function endYourWalk() {
+        //Will have ajax call to get all markers, run confirmation check, 
+        //Within this call can also dyanmically update point total
     prepareRouteWaypoints();
-
-    //Will have ajax call to get all markers, run confirmation check, 
 }
 function prepareRouteWaypoints() {
     var RouteId = document.getElementById('currentRouteId').value;
@@ -281,4 +287,34 @@ function parseWaypoints(data) {
         });
     }
     createDirections(startPoint, endPoint, waypts);
+}
+
+
+function updateRoute() {
+    var updatedRoute = {
+        "RouteId": parseInt(document.getElementById('hiddenRouteId').value),
+        "RouteName": document.getElementById('editRouteName').value,
+        "RouteDescription": document.getElementById('editRouteDescription').value,
+        "TotalTimeMilliseconds": JSON.parse(document.getElementById('totalTime').value),
+        "TotalDistance": parseFloat(document.getElementById('totalDistance').value),
+        "TotalPoints": parseFloat(document.getElementById('totalPoints').value),
+    };
+    $(document).ready(function () {
+        $.ajax({
+            type: 'PUT',
+            url: '/Wanderers/PutMarker',
+            data: JSON.stringify(updatedMarker),
+            contentType: "application/json; charset=utf-8",
+            success: function () {
+                alert("What a lovely walkabout!");
+                //window.location = "C:\Users\megan\source\repos\Walkabout\WalkaboutProj\WalkaboutProj\Views\Wanderers\Index.cshtml";
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("We hit a problem with PUTTING");
+            }
+        }).then(function () {
+            getRouteMarkers();
+        });
+    });
 }

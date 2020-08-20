@@ -24,19 +24,18 @@
             <form id="edit-route">
                 <h3>Create your Route</h3>
                 <div class="form-group">
-                    <input id="hiddenRouteId" name="hiddenRouteId" type="hidden" />
+                    <label class="control-label" for="total Distance">Your route distance (in KM)</label>
+                    <input class="form-control" id="totalDistance" readonly="" name="totalDistance" />
                 </div>
                 <div class="form-group">
-                    <input id="hiddenWandererId" name="hiddenWandererId" type="hidden" />
+                    <label class="control-label" for="totalTime">Your total time: (MS)</label>
+                    <input id="totalTime" name="totalTime" />
                 </div>
                 <div class="form-group">
-                    <input id="hiddenTotalTime" name="hiddenTotalTime" type="hidden" />
+                    <input id="hiddenTotalPoints" name="totalPoints" />
                 </div>
                 <div class="form-group">
-                    <input id="hiddenTotalPoints" name="hiddenTotalPoints" type="hidden" />
-                </div>
-                <div class="form-group">
-                    <input id="routeName" name="routeName" placeholder="Name your Route" />
+                    <input id="routeName" name="editRouteName" placeholder="Name your Route" />
                 </div>
                 <div class="form-group">
                     <textarea class="form-control form-control-sm" id="editRouteDescription" rows="2" placeholder="Enter a Description">
@@ -121,9 +120,28 @@
     var map2;
     var directionsService;
     var directionsRenderer;
+    var iconBase =
+        'https://developers.google.com/maps/documentation/javascript/examples/full/images/';
+    var icons = {
+        StartPoint: {
+            icon: 'http://maps.google.com/mapfiles/kml/paddle/go.png'
+        },
+        EndPoint: {
+            icon: 'http://maps.google.com/mapfiles/kml/paddle/grn-square.png'
+        },
+        Wildlife: {
+            icon: 'https://www.gstatic.com/earth/images/stockicons/190201-2016-animal-paw_4x.png'
+        },
+        Landmark: {
+            icon: 'http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png'
+        },
+        Highlight: {
+            icon: 'http://maps.google.com/mapfiles/kml/paddle/ylw-stars.png'
+        }
+    };
     
     function initMap() {
-       
+
             var map = new google.maps.Map(
                 document.getElementById('map'), {
                 zoom: 16, center: currentLocation
@@ -175,6 +193,7 @@
 
                 google.maps.event.addDomListener(saveBtn, "click", function (event) {
                     saveBtn.style.display = "none";
+
                     var markerName = document.getElementById("markerName").value;
                     var markerCategory = document.getElementById("markerCategory").value;
                     var markerDescription = document.getElementById("markerDescription").value;
@@ -213,8 +232,8 @@
                 if (status === "OK") {
                     alert("Omg it worked?");
                     directionsRenderer.setDirections(response);
-                    const route = response.routes[0]
-
+                    const route = response.routes[0];
+                    computeTotalDistanceTime(response);
                 }
                 else {
                     alert("Directions request failed");
@@ -223,6 +242,21 @@
         );
     }
 
+    function computeTotalDistanceTime(result) {
+        var totalDistance = 0;
+        var myRoute = result.routes[0];
+        for (i = 0; i < myRoute.legs.length; i++) {
+            totalDistance += myRoute.legs[i].distance.value;
+        }
+        //convert to KM
+        totalDistance = totalDistance / 1000
+        $('#totalDistance').val(totalDistance);
+        var startTime = document.getElementById("totalTime").value;
+        var endTime = Date.now();
+        var timeElapsed = endTime - startTime;
+        $('#totalTime').val(timeElapsed);
+
+    }
 </script>
 
 

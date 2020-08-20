@@ -427,9 +427,10 @@ namespace WalkaboutProj.Controllers
             {
                 return NotFound();
             }
-            routeToUpdate.RouteName = routeToUpdate.RouteName;
-            routeToUpdate.RouteDescription = routeToUpdate.RouteDescription;
-            routeToUpdate.TotalDistance = routeToUpdate.TotalDistance;
+            routeToUpdate.RouteName = updatedRoute.RouteName;
+            routeToUpdate.RouteDescription = updatedRoute.RouteDescription;
+            routeToUpdate.TotalDistance = updatedRoute.TotalDistance;
+            routeToUpdate.TotalTimeMilliseconds = updatedRoute.TotalTimeMilliseconds;
             routeToUpdate.TotalPoints = updatedRoute.TotalPoints;
             _context.Update(routeToUpdate);
             _context.SaveChanges();
