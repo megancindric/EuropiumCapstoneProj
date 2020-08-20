@@ -380,7 +380,7 @@ namespace WalkaboutProj.Controllers
             }
             _context.Remove(markerToDelete);
             _context.SaveChanges();
-            return Ok();
+            return Json(new { markerToDelete.PointValue });
         }
 
         [HttpPost]

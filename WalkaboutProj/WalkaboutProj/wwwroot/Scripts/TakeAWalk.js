@@ -1,6 +1,8 @@
 ﻿function createNewMarker(marker, markerName, markerCategory, markerDescription, markerLat, markerLong, routeId) {
     var newMarker = createMarkerObject(markerName, markerCategory, markerDescription, markerLat, markerLong, routeId);
     var iconURL = icons[markerCategory].icon;
+
+    marker.setIcon(iconURL);
     if (markerCategory == "StartPoint" || markerCategory == "EndPoint") {
         checkForDuplicates(marker,newMarker);
     }
@@ -12,8 +14,10 @@
             contentType: 'application/json; charset=utf-8',
             success: function () {
                 alert("Your marker has been saved!")
-                marker.setDraggable(false); //set marker to fixed
-                marker.setIcon(iconURL);
+                marker.setDraggable(false);
+                currentPoints = parseInt(document.getElementById('totalPoints').value) + newMarker.PointValue;
+                $('#totalPoints').val(currentPoints)
+
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert("We hit a problem with POSTING"); //throw any errors
@@ -42,7 +46,7 @@ function checkForDuplicates(marker,newMarker) {
                         contentType: 'application/json; charset=utf-8',
                         success: function () {
                             alert("Your marker has been saved!")
-                            marker.setDraggable(false); //set marker to fixed
+                            marker.setDraggable(false);
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             alert("We hit a problem with POSTING"); //throw any errors
@@ -110,7 +114,7 @@ function createMarkerObject(markerName, markerCategory, markerDescription, marke
         "PicturePath": "",
         "MarkerDescription": markerDescription,
         "IsFavorite": false,
-        "PointValue": 0,
+        "PointValue": pointValues[markerCategory].pointValue,
         "MarkerLat": markerLat,
         "MarkerLong": markerLong,
     }
@@ -184,8 +188,10 @@ function removeMarker(MarkerId) {
             url: '/Wanderers/DeleteMarker',
             data: { MarkerId: MarkerId },
 
-            success: function () {
+            success: function (result) {
                 alert("Your marker has been removed!");
+                currentPoints = parseInt(document.getElementById('totalPoints').value) - result.pointValue;
+                $('#totalPoints').val(currentPoints)
                 getRouteMarkers();
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -206,6 +212,7 @@ function createNewRoute(WandererId) {
         success: function (result) {
             var currentRouteId = document.getElementById('currentRouteId');
             currentRouteId.value = result.routeId;
+            $('#totalPoints').val(0);
             alert("Your route has been created!!")
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -307,7 +314,7 @@ function updateRoute() {
             contentType: "application/json; charset=utf-8",
             success: function () {
                 alert("What a lovely walkabout!");
-                //window.location = "C:\Users\megan\source\repos\Walkabout\WalkaboutProj\WalkaboutProj\Views\Wanderers\Index.cshtml";
+                window.location = "https://localhost:44303/Wanderers";
 
             },
             error: function (xhr, ajaxOptions, thrownError) {

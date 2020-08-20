@@ -13,32 +13,34 @@
     <br />
     <div class="row">
         <div class="col-md-6 collapse" id="createMarkersMap">
-         @*if marker.category == startingpoint/endingpoint Will need to query all route markers to see if start point or end point is saved, throw error if there is (alert)*@
-            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" data-target="#routeDetails">End your walk!</button>
+            <div class="form-group col-md-2">
+                <label class="control-label" for="totalPoints">Your Total Points</label>
+                <input class="form-control" id="totalPoints" name="totalPoints" readonly="" />
+            </div>
+            <div class="form-group col-md-2">
+                <label class="control-label" for="totalTime">Your total time: (MS)</label>
+                <input class="form-control" id="totalTime" readonly="" name="totalTime" />
+            </div>
+            <div class="form-group col-md-2">
+                <label class="control-label" for="totalDistance">Your route distance (in KM)</label>
+                <input class="form-control" id="totalDistance" readonly="" name="totalDistance" />
+            </div>
+            @*if marker.category == startingpoint/endingpoint Will need to query all route markers to see if start point or end point is saved, throw error if there is (alert)*@
+            <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" data-target="#routeDetails,#createMarkersMap,#routeMap">End your walk!</button>
             <div id="map"></div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 collapse" id="routeMap">
             <div id="map2"></div>
         </div>
         <div class="col-md-6 collapse" id="routeDetails">
             <form id="edit-route">
                 <h3>Create your Route</h3>
+ 
                 <div class="form-group">
-                    <label class="control-label" for="total Distance">Your route distance (in KM)</label>
-                    <input class="form-control" id="totalDistance" readonly="" name="totalDistance" />
+                    <input id="editRouteName" name="editRouteName" placeholder="Name your Route" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="totalTime">Your total time: (MS)</label>
-                    <input id="totalTime" name="totalTime" />
-                </div>
-                <div class="form-group">
-                    <input id="hiddenTotalPoints" name="totalPoints" />
-                </div>
-                <div class="form-group">
-                    <input id="routeName" name="editRouteName" placeholder="Name your Route" />
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control form-control-sm" id="editRouteDescription" rows="2" placeholder="Enter a Description">
+                    <textarea class="form-control form-control-sm" rows="2" placeholder="Enter a Description" id="editRouteDescription" >
                  </textarea>
                 </div>
                 <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateRoute()">Save this Route:</button>
@@ -133,10 +135,28 @@
             icon: 'https://www.gstatic.com/earth/images/stockicons/190201-2016-animal-paw_4x.png'
         },
         Landmark: {
-            icon: 'http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png'
+            icon: 'http://maps.google.com/mapfiles/kml/paddle/red-diamond.png'
         },
         Highlight: {
-            icon: 'http://maps.google.com/mapfiles/kml/paddle/ylw-stars.png'
+            icon: 'http://maps.google.com/mapfiles/kml/paddle/red-stars.png'
+        }
+    };
+
+    var pointValues = {
+        StartPoint: {
+            pointValue: 0
+        },
+        EndPoint: {
+            pointValue: 0
+        },
+        Wildlife: {
+            pointValue: 10
+        },
+        Landmark: {
+            pointValue: 8
+        },
+        Highlight: {
+            pointValue: 5
         }
     };
     
@@ -193,7 +213,6 @@
 
                 google.maps.event.addDomListener(saveBtn, "click", function (event) {
                     saveBtn.style.display = "none";
-
                     var markerName = document.getElementById("markerName").value;
                     var markerCategory = document.getElementById("markerCategory").value;
                     var markerDescription = document.getElementById("markerDescription").value;
