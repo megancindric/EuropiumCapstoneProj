@@ -57,8 +57,7 @@
                                 @Html.DisplayFor(routeItem => testRoute.TotalPoints)
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-outline-light" data-toggle="collapse" data-target="routeDetailsTable
-                                " onclick="getRouteDetails(@testRoute.RouteId)">
+                                <button class="btn btn-sm btn-outline-light" data-toggle="collapse" data-target="#routeDetailsTable" onclick="getRouteDetails(@testRoute.RouteId)">
                                     Details
                                 </button>
                             </td>
@@ -68,12 +67,12 @@
             </tbody>
         </table>
     </div>
-    <div class="row">
+    <div class="row collapse" id="routeDetailsTable">
         <div class="col-md-6">
             <h2>Map dashboard here!</h2>
             <div id="map"></div>
         </div>
-        <div class="col-md-6 collapse" id="routeDetailsTable">
+        <div class="col-md-6">
             <h2>Route Details: </h2>
             <table class="table table-primary">
                 <thead>
@@ -102,7 +101,7 @@
                     @*here we will insert details about all markers matching that route*@
                 </tbody>
             </table>
-            <button class="btn btn-sm btn-outline-primary" data-toggle="collapse" data-target="routeDetailsTable" onclick="initMap()">Close details</button>
+            <button class="btn btn-sm btn-outline-primary" data-toggle="collapse" data-target="#routeDetailsTable" >Close details</button>
         </div>
     </div>
 </div>
