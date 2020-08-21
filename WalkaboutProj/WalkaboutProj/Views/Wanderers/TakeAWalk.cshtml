@@ -9,22 +9,16 @@
 <div class="container-fluid">
     <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="startYourWalk " onclick="createNewRoute(@Model.Wanderer.WandererId); this.style.display = 'none'" data-target="#createMarkersMap">Start your walk!</button>
     <input id="currentRouteId" type="hidden" name="currentRouteId" />
-
+    <br />
     <br />
     <div class="row">
         <div class="col-md-6 collapse" id="createMarkersMap">
-            <div class="form-group col-md-2">
+
+            <div class="form-group">
                 <label class="control-label" for="totalPoints">Your Total Points</label>
                 <input class="form-control" id="totalPoints" name="totalPoints" readonly="" />
             </div>
-            <div class="form-group col-md-2">
-                <label class="control-label" for="totalTime">Your total time: (MS)</label>
-                <input class="form-control" id="totalTime" readonly="" name="totalTime" />
-            </div>
-            <div class="form-group col-md-2">
-                <label class="control-label" for="totalDistance">Your route distance (in KM)</label>
-                <input class="form-control" id="totalDistance" readonly="" name="totalDistance" />
-            </div>
+           
             @*if marker.category == startingpoint/endingpoint Will need to query all route markers to see if start point or end point is saved, throw error if there is (alert)*@
             <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" data-target="#routeDetails,#createMarkersMap,#routeMap">End your walk!</button>
             <div id="map"></div>
@@ -35,12 +29,21 @@
         <div class="col-md-6 collapse" id="routeDetails">
             <form id="edit-route">
                 <h3>Create your Route</h3>
- 
                 <div class="form-group">
-                    <input id="editRouteName" name="editRouteName" placeholder="Name your Route" />
+                    <label class="control-label" for="totalTime">Your total time: (MS)</label>
+                    <input class="form-control" id="totalTime" readonly="" name="totalTime" />
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control form-control-sm" rows="2" placeholder="Enter a Description" id="editRouteDescription" >
+                    <label class="control-label" for="totalDistance">Your route distance (in KM)</label>
+                    <input class="form-control" id="totalDistance" readonly="" name="totalDistance" />
+                </div>
+                <div class="form-group">
+                    <label for="editMarkerDescription">Name your route:</label>
+                    <input id="editRouteName" name="editRouteName" />
+                </div>
+                <div class="form-group">
+                    <label for="editRouteDescription">Enter a description:</label>
+                    <textarea class="form-control" rows="2" id="editRouteDescription">
                  </textarea>
                 </div>
                 <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateRoute()">Save this Route:</button>
@@ -63,7 +66,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 collapse" id="editMarkerForm">
             <form id="edit-marker">
                 <h3>Edit this Marker</h3>
                 <div class="form-group">
@@ -83,7 +86,7 @@
                 </div>
                 <div class="form-group">
                     <input id="hiddenMarkerLong" name="hiddenMarkerLong" type="hidden" />
-                </div>
+                </div> 
                 <div class="form-group">
                     <input id="hiddenPicturePath" name="hiddenPicturePath" type="hidden" />
                 </div>
@@ -101,19 +104,18 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control form-control-sm" id="editMarkerDescription" rows="2" placeholder="Enter a Description">
+                    <label for="editMarkerDescription">Enter a description:</label>
+                    <textarea class="form-control" id="editMarkerDescription" placeholder="Enter a description" rows="2">
                  </textarea>
                 </div>
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateMarker()">Update this Marker:</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="collapse" data-target="#editMarkerForm" onclick="updateMarker()">Update this Marker:</button>
             </form>
         </div>
     </div>
 </div>
-<script async defer src="@APIKeys.APIURL">
-</script>
+<script async defer src="@APIKeys.APIURL"></script>
 <script src="~/Scripts/TakeAWalk.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 <script>
@@ -122,8 +124,7 @@
     var map2;
     var directionsService;
     var directionsRenderer;
-    var iconBase =
-        'https://developers.google.com/maps/documentation/javascript/examples/full/images/';
+    
     var icons = {
         StartPoint: {
             icon: 'http://maps.google.com/mapfiles/kml/paddle/go.png'
@@ -249,7 +250,6 @@
             },
             (response, status) => {
                 if (status === "OK") {
-                    alert("Omg it worked?");
                     directionsRenderer.setDirections(response);
                     const route = response.routes[0];
                     computeTotalDistanceTime(response);
@@ -274,7 +274,6 @@
         var endTime = Date.now();
         var timeElapsed = endTime - startTime;
         $('#totalTime').val(timeElapsed);
-
     }
 </script>
 

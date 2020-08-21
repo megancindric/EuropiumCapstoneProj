@@ -13,7 +13,6 @@
             data: JSON.stringify(newMarker),
             contentType: 'application/json; charset=utf-8',
             success: function () {
-                alert("Your marker has been saved!")
                 marker.setDraggable(false);
                 currentPoints = parseInt(document.getElementById('totalPoints').value) + newMarker.PointValue;
                 $('#totalPoints').val(currentPoints)
@@ -45,7 +44,6 @@ function checkForDuplicates(marker,newMarker) {
                         data: JSON.stringify(newMarker),
                         contentType: 'application/json; charset=utf-8',
                         success: function () {
-                            alert("Your marker has been saved!")
                             marker.setDraggable(false);
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
@@ -145,7 +143,7 @@ function addMarkersToTable(data) {
                     <tr><td>${data[i].markerName}</td>
                     <td>${data[i].markerCategory}</td>
                     <td>${data[i].markerDescription}</td>
-                    <td><button type="submit" class="btn btn-outline-danger"onclick="editSingleMarker(${data[i].markerId})">Edit</button>
+                    <td><button type="submit" class="btn btn-outline-danger" data-toggle="collapse" data-target="#editMarkerForm" onclick="editSingleMarker(${data[i].markerId})">Edit</button>
                     <td><button type="submit" class="btn btn-outline-danger"onclick="removeMarker(${data[i].markerId})">Delete</button></tr>
                     </tr>`)
     }
@@ -213,7 +211,6 @@ function createNewRoute(WandererId) {
             var currentRouteId = document.getElementById('currentRouteId');
             currentRouteId.value = result.routeId;
             $('#totalPoints').val(0);
-            alert("Your route has been created!!")
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alert("We hit a problem with POSTING"); //throw any errors
@@ -240,7 +237,6 @@ function initialRouteGet(dateTime) {
             url: '/Wanderers/InitialRouteGet',
             data: { TotalTimeMilliseconds: dateTime },
             success: function () {
-                alert("initial GET successful");
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert("We hit a problem with GETTING");
@@ -309,8 +305,8 @@ function updateRoute() {
     $(document).ready(function () {
         $.ajax({
             type: 'PUT',
-            url: '/Wanderers/PutMarker',
-            data: JSON.stringify(updatedMarker),
+            url: '/Wanderers/PutRoute',
+            data: JSON.stringify(updatedRoute),
             contentType: "application/json; charset=utf-8",
             success: function () {
                 alert("What a lovely walkabout!");

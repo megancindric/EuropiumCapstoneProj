@@ -28,9 +28,9 @@ namespace WalkaboutProj.Controllers
             WandererIndexViewModel wandererView = new WandererIndexViewModel();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             wandererView.Wanderer = _context.Wanderers.Where(w => w.IdentityUserId == userId).FirstOrDefault();
-            
+            wandererView.MyRoutes = _context.Routes.Where(r => r.WandererId == wandererView.Wanderer.WandererId).ToList();
+           
             wandererView = Geocode(wandererView);
-            //wandererView.MyRoutes = _context.Routes.Where(r => r.WandererId == wandererView.Wanderer.WandererId).ToList();
             return View(wandererView);
         }
         [HttpPost]
