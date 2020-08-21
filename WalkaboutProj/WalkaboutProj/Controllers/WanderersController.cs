@@ -29,6 +29,17 @@ namespace WalkaboutProj.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             wandererView.Wanderer = _context.Wanderers.Where(w => w.IdentityUserId == userId).FirstOrDefault();
             wandererView.MyRoutes = _context.Routes.Where(r => r.WandererId == wandererView.Wanderer.WandererId).ToList();
+            wandererView.MyTotalDistance = 0;
+            wandererView.MyTotalPoints = 0;
+            wandererView.MyTotalWalkCount = wandererView.MyRoutes.Count;
+            if (wandererView.MyRoutes.Count != 0)
+            {
+                foreach (Route route in wandererView.MyRoutes)
+                {
+                    wandererView.MyTotalDistance += route.TotalDistance;
+                    wandererView.MyTotalPoints += route.TotalPoints;
+                }
+            }
            
             wandererView = Geocode(wandererView);
             return View(wandererView);
@@ -147,115 +158,7 @@ namespace WalkaboutProj.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult CreateRoute()
-        {
-            return View();
-        }
 
-        // POST: Listing/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateRoute([Bind("RouteId,WandererId,RouteName,RouteDescription,StartTime,EndTime,TotalDistance,TotalPoints,LocationLat,LocationLong")] Route route)
-        {
-           
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentWanderer = _context.Wanderers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            route.WandererId = currentWanderer.WandererId;
-            _context.Add(route);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult EditRoute(int id)
-        {
-            //When we create button for this, pass in ID of current listing as param
-            var listing = _context.Routes.Where(c => c.RouteId == id).SingleOrDefault();
-            return View(listing);
-        }
-
-        // POST: Listing/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditRoute(int id, [Bind("RouteId,WandererId,RouteName,RouteDescription,StartTime,EndTime,TotalDistance,TotalPoints,LocationLat,LocationLong")] Route route)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentWanderer = _context.Wanderers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var routeToUpdate = _context.Routes.Where(c => c.RouteId == id).SingleOrDefault();
-            try
-            {
-                routeToUpdate.RouteName = route.RouteName;
-                routeToUpdate.RouteDescription = route.RouteDescription;
-                //Should not be able to change other parts of route
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RouteExists(route.RouteId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction("Index");
-        }
-
-        // GET: Traders/Delete/5
-        public IActionResult DeleteRoute(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var route = _context.Routes
-                .Include(c => c.RouteId)
-                .FirstOrDefault(m => m.RouteId == id);
-            if (route == null)
-            {
-                return NotFound();
-            }
-
-            return View(route);
-        }
-
-        // POST: Traders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteRouteConfirmed(int id)
-        {
-            var route = _context.Routes.FirstOrDefault(m => m.RouteId == id);
-            _context.Routes.Remove(route);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult RouteDetails(int? id)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentWanderer = _context.Wanderers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var route = _context.Routes.Where(m => m.RouteId == id).FirstOrDefault();
-            var routeMarkers = _context.Markers.Where(r => r.RouteId == route.RouteId).ToList();
-            if (route == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                RouteViewModel viewModel = new RouteViewModel();
-                viewModel.Wanderer = currentWanderer;
-                viewModel.RouteMarkers = routeMarkers;
-                viewModel.Route = route;
-
-                return View(viewModel);
-            }
-        }
 
         private bool WandererExists(int id)
         {
@@ -395,8 +298,7 @@ namespace WalkaboutProj.Controllers
         [HttpGet]
         public IActionResult GetRoute(int RouteId)
         {
-            // Retrieve movie by id from db logic
-            // return Ok(movie);
+
             var currentRoute = _context.Routes.Where(s => s.RouteId == RouteId).SingleOrDefault();
             if (currentRoute == null)
             {
