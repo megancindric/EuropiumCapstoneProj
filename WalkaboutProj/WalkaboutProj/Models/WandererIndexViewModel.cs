@@ -9,6 +9,7 @@ namespace WalkaboutProj.Models
     {
         public Wanderer Wanderer { get; set; }
         public List<Route> MyRoutes { get; set; }
+        public Route HighScore { get; set; }
         public double MyTotalPoints { get; set; }
         public double MyTotalDistance { get; set; }
         public int MyTotalWalkCount { get; set; }

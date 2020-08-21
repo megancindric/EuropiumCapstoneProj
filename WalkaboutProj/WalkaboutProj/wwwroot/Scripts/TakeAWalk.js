@@ -225,6 +225,7 @@ function createRouteObject(WandererId, dateTime) {
         "RouteName": "New Route",
         "RouteDescription": "Enter a description for your route",
         "TotalDistance": 0,
+        "RouteRating" : 0,
         "TotalTimeMilliseconds": dateTime,
     }
     return routeInfo;
@@ -297,6 +298,7 @@ function updateRoute() {
     var updatedRoute = {
         "RouteId": parseInt(document.getElementById('hiddenRouteId').value),
         "RouteName": document.getElementById('editRouteName').value,
+        "RouteRating": parseInt(document.getElementById('starValue').value),
         "RouteDescription": document.getElementById('editRouteDescription').value,
         "TotalTimeMilliseconds": JSON.parse(document.getElementById('totalTime').value),
         "TotalDistance": parseFloat(document.getElementById('totalDistance').value),

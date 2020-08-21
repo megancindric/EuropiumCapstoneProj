@@ -30,5 +30,7 @@ namespace WalkaboutProj.Models
 
         [Display(Name = "Total Points")]
         public double TotalPoints { get; set; }
+
+        public int RouteRating { get; set; }
     }
 }

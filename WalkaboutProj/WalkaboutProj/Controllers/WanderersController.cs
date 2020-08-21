@@ -9,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using WalkaboutProj.Data;
 using WalkaboutProj.Models;
 using GoogleMaps.LocationServices;
-
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
+using System.Security.Cryptography.X509Certificates;
 
 namespace WalkaboutProj.Controllers
 {
@@ -32,6 +35,7 @@ namespace WalkaboutProj.Controllers
             wandererView.MyTotalDistance = 0;
             wandererView.MyTotalPoints = 0;
             wandererView.MyTotalWalkCount = wandererView.MyRoutes.Count;
+            wandererView.HighScore = wandererView.MyRoutes.OrderByDescending(r => r.TotalPoints).First();
             if (wandererView.MyRoutes.Count != 0)
             {
                 foreach (Route route in wandererView.MyRoutes)
@@ -49,6 +53,7 @@ namespace WalkaboutProj.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             viewModel.Wanderer = _context.Wanderers.Where(s => s.IdentityUserId == userId).FirstOrDefault();
+            //function to get highest scoring route
             //viewModel.MyRoutes = _context.Routes.Where(r => r.WandererId == viewModel.Wanderer.WandererId).ToList();
             viewModel = Geocode(viewModel);
 
@@ -329,6 +334,7 @@ namespace WalkaboutProj.Controllers
             {
                 return NotFound();
             }
+            routeToUpdate.RouteRating = updatedRoute.RouteRating;
             routeToUpdate.RouteName = updatedRoute.RouteName;
             routeToUpdate.RouteDescription = updatedRoute.RouteDescription;
             routeToUpdate.TotalDistance = updatedRoute.TotalDistance;
@@ -362,6 +368,32 @@ namespace WalkaboutProj.Controllers
             routeMarkers.Add(routeEnd);
             return Ok(routeMarkers);
 
+        }
+
+        public string UploadImage(IFormFile files)
+        {
+            var myFileName = "";
+            if (files != null)
+            {
+
+                if (files.Length > 0)
+                {
+                    var fileName = Path.GetFileName(files.FileName);
+                    myFileName = Convert.ToString(Guid.NewGuid());
+                    var fileExtension = Path.GetExtension(fileName);
+                    var newFileName = string.Concat(myFileName, fileExtension);
+                    var filePath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img")).Root + $@"\{newFileName}";
+
+                    using (FileStream fs = System.IO.File.Create(filePath))
+                    {
+                        files.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    return newFileName;
+                }
+
+            }
+            return myFileName;
         }
     }
 }

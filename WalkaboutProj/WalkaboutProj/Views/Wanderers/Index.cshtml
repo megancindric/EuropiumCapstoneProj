@@ -5,77 +5,156 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .checked {
+        color: orange;
+    }
+</style>
 
-    <div class="container-fluid">
+<div class="container-fluid">
 
-        <div class="container">
-            <div class="jumbotron">
-                <h2 class="display-3">Hello, @Html.DisplayFor(model => model.Wanderer.Username)!</h2>
-            </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card text-white bg-primary mb-3">
-                        <div class="card-header" style="text-align:center"><strong>My Weekly Stats</strong></div>
-                        <table class="table table-primary" style="text-align:center">
-                            <thead>
-                                <tr>
-                                    <th>Walks this Week</th>
-                                    <th>Weekly distance</th>
-                                    <th>Weekly points</th>
-                                </tr>
-                            </thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayFor(model => model.MyRoutes.Count)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(model => model.MyTotalDistance)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(model => Model.MyTotalPoints)
-                                </th>
-                            </tr>
-                            <tbody class="table table-primary" id="wandererStatsTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card text-white bg-primary mb-3">
-                        <div class="card-header" style="text-align:center"><strong>My Overall Stats</strong></div>
-                        <table class="table table-primary" style="text-align:center">
-                            <thead>
-                                <tr>
-                                    <th>Total Walks</th>
-                                    <th>Total distance</th>
-                                    <th>Total points</th>
-                                </tr>
-                            </thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayFor(model => model.MyRoutes.Count)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(model => model.MyTotalDistance)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(model => Model.MyTotalPoints)
-                                </th>
-                            </tr>
-                            <tbody class="table table-primary" id="wandererStatsTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-            </div>
-
+    <div class="container">
+        <div class="jumbotron">
+            <h2 class="display-3">Hello, @Html.DisplayFor(model => model.Wanderer.Username)!</h2>
         </div>
         <div class="row">
-            <button class="btn btn-secondary btn-lg" data-toggle="collapse" style="text-align:center" data-target="#routeHistory">Toggle Route History</button>
+            <div class="col-lg-6">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header" style="text-align:center"><strong>My Overall Stats</strong></div>
+                    <table class="table table-primary" style="text-align:center">
+                        <thead>
+                            <tr>
+                                <th>Total Walks</th>
+                                <th>Total distance</th>
+                                <th>Total points</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayFor(model => model.MyRoutes.Count)
+                            </th>
+                            <th>
+                                @Html.DisplayFor(model => model.MyTotalDistance)
+                            </th>
+                            <th>
+                                @Html.DisplayFor(model => Model.MyTotalPoints)
+                            </th>
+                        </tr>
+                        <tbody class="table table-primary" id="wandererStatsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header" style="text-align:center"><strong>My Highscore:</strong></div>
+                    <table class="table table-primary" style="text-align:center">
+                        <thead>
+                            <tr>
+                                <th>Walk Name</th>
+                                <th>Distance</th>
+                                <th>Rating</th>
+                                <th>Total Points</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayFor(model => model.HighScore.RouteName)
+                            </th>
+                            <th>
+                                @Html.DisplayFor(model => model.HighScore.TotalDistance)
+                            </th>
+                            <th>
+                                @for (int i = 0; i < @Model.HighScore.RouteRating; i++)
+                                {
+                                    <span class="fa fa-star checked fa-2x"></span>
+
+                                }
+                                @for (int i = 0; i < 5 - @Model.HighScore.RouteRating; i++)
+                                {
+                                    <span class="fa fa-star fa-2x"></span>
+                                }
+                            </th>
+                            <th>
+                                @Html.DisplayFor(model => Model.HighScore.TotalPoints)
+                            </th>
+                        </tr>
+                        <tbody class="table table-primary" id="wandererStatsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+
         </div>
-        <div class="row collapse" id="routeHistory">
-            <h3>My Walkabout History</h3>
-            <table class="table table-secondary">
+
+    </div>
+    <div class="row">
+        <button class="btn btn-secondary btn-lg" data-toggle="collapse" style="text-align:center" data-target="#routeHistory">Toggle Route History</button>
+    </div>
+    <div class="row collapse" id="routeHistory">
+        <h3>My Walkabout History</h3>
+        <table class="table table-secondary">
+            <thead>
+                <tr>
+                    <th>Route Name</th>
+                    <th>Total Distance</th>
+                    <th>Total Points</th>
+                    <th>Route Rating</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.MyRoutes.Count == 0)
+                {
+                    <tr class="table table-secondary disabled">Whoops!  No routes to display :(</tr>
+                }
+                else
+                {
+                    foreach (var testRoute in Model.MyRoutes)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(routeItem => testRoute.RouteName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(routeItem => testRoute.TotalDistance)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(routeItem => testRoute.TotalPoints)
+                            </td>
+                            <td>
+                                @for (int i = 0; i < testRoute.RouteRating; i++)
+                                {
+                                    <span class="fa fa-star checked fa-2x"></span>
+
+                                }
+                                @for (int i = 0; i < 5 - testRoute.RouteRating; i++)
+                                {
+                                    <span class="fa fa-star fa-2x"></span>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#routeDetailsTable" onclick="getRouteDetails(@testRoute.RouteId); getMarkerDetails(@testRoute.RouteId)">
+                                    Details
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row collapse" id="routeDetailsTable">
+        <button type="button" class="btn btn-lg btn-primary" data-toggle="collapse" onclick="initMap()" data-target="#routeDetailsTable">Close details</button>
+    </div>
+    <div class="row collapse" id="routeDetailsTable">
+        <div class="col-md-6">
+            <h4>My Route:</h4>
+            <div id="map"></div>
+        </div>
+        <div class="col-md-6">
+            <h4>Route Details: </h4>
+            <table class="table table-primary">
                 <thead>
                     <tr>
                         <th>Route Name</th>
@@ -84,76 +163,27 @@
                         <th>Details</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @if (Model.MyRoutes.Count == 0)
-                    {
-                        <tr class="table table-secondary disabled">Whoops!  No routes to display :(</tr>
-                    }
-                    else
-                    {
-                        foreach (var testRoute in Model.MyRoutes)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(routeItem => testRoute.RouteName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(routeItem => testRoute.TotalDistance)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(routeItem => testRoute.TotalPoints)
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#routeDetailsTable" onclick="getRouteDetails(@testRoute.RouteId); getMarkerDetails(@testRoute.RouteId)">
-                                        Details
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    }
+                <tbody class="table table-primary" id="routeDetails">
+                    @*here we will insert details about current route*@
+                </tbody>
+            </table>
+            <h4>Marker Details: </h4>
+            <table class="table table-secondary">
+                <thead>
+                    <tr>
+                        <th>Marker Name</th>
+                        <th>Marker Category</th>
+                        <th>Point Value</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody class="table table-secondary" id="routeMarkerDetails">
+                    @*here we will insert details about all markers matching that route*@
                 </tbody>
             </table>
         </div>
-        <div class="row collapse" id="routeDetailsTable">
-            <button type="button" class="btn btn-lg btn-primary" data-toggle="collapse" onclick="initMap()" data-target="#routeDetailsTable">Close details</button>
-        </div>
-        <div class="row collapse" id="routeDetailsTable">
-            <div class="col-md-6">
-                <h4>My Route:</h4>
-                <div id="map"></div>
-            </div>
-            <div class="col-md-6">
-                <h4>Route Details: </h4>
-                <table class="table table-primary">
-                    <thead>
-                        <tr>
-                            <th>Route Name</th>
-                            <th>Total Distance</th>
-                            <th>Total Points</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table table-primary" id="routeDetails">
-                        @*here we will insert details about current route*@
-                    </tbody>
-                </table>
-                <h4>Marker Details: </h4>
-                <table class="table table-secondary">
-                    <thead>
-                        <tr>
-                            <th>Marker Name</th>
-                            <th>Marker Category</th>
-                            <th>Point Value</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table table-secondary" id="routeMarkerDetails">
-                        @*here we will insert details about all markers matching that route*@
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
+</div>
 
 <script async defer src="@APIKeys.APIURL">
 </script>
@@ -294,4 +324,5 @@
             }
         );
     }
+
 </script>

@@ -4,6 +4,7 @@
     ViewData["Title"] = "TakeAWalk";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <h1>Let's take a Walk!</h1>
 <div class="container-fluid">
@@ -18,7 +19,7 @@
                 <label class="control-label" for="totalPoints">Your Total Points</label>
                 <input class="form-control" id="totalPoints" name="totalPoints" readonly="" />
             </div>
-           
+
             @*if marker.category == startingpoint/endingpoint Will need to query all route markers to see if start point or end point is saved, throw error if there is (alert)*@
             <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" data-target="#routeDetails,#createMarkersMap,#routeMap">End your walk!</button>
             <div id="map"></div>
@@ -45,6 +46,18 @@
                     <label for="editRouteDescription">Enter a description:</label>
                     <textarea class="form-control" rows="2" id="editRouteDescription">
                  </textarea>
+                </div>
+                <div class="form-group">
+                    <input class="star star-5" value="5" id="star-5" type="radio" name="starValue" />
+                    <label class="star star-5" for="star-5"></label>
+                    <input class="star star-4" value="4" id="star-4" type="radio" name="starValue" />
+                    <label class="star star-4" for="star-4"></label>
+                    <input class="star star-3" value="3" id="star-3" type="radio" name="starValue" />
+                    <label class="star star-3" for="star-3"></label>
+                    <input class="star star-2" value="2" id="star-2" type="radio" name="starValue" />
+                    <label class="star star-2" for="star-2"></label>
+                    <input class="star star-1" value="1" id="star-1" type="radio" name="starValue" />
+                    <label class="star star-1" for="star-1"></label>
                 </div>
                 <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateRoute()">Save this Route:</button>
             </form>
@@ -86,7 +99,7 @@
                 </div>
                 <div class="form-group">
                     <input id="hiddenMarkerLong" name="hiddenMarkerLong" type="hidden" />
-                </div> 
+                </div>
                 <div class="form-group">
                     <input id="hiddenPicturePath" name="hiddenPicturePath" type="hidden" />
                 </div>
@@ -124,7 +137,7 @@
     var map2;
     var directionsService;
     var directionsRenderer;
-    
+
     var icons = {
         StartPoint: {
             icon: 'http://maps.google.com/mapfiles/kml/paddle/go.png'
@@ -160,7 +173,7 @@
             pointValue: 5
         }
     };
-    
+
     function initMap() {
 
             var map = new google.maps.Map(
@@ -229,7 +242,7 @@
                 });
             });
 
-    } 
+    }
 
     function createDirections(startPoint, endPoint, waypts) {
         var directionsService = new google.maps.DirectionsService();
