@@ -7,6 +7,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="container-fluid">
+    <input id="currentRouteId" type="hidden" name="currentRouteId" />
+    <input id="totalTimeMinutes" type="hidden" name="totalTimeMinutes" />
+    <input id="totalDistanceMI" type="hidden" name="totalDistanceKM" />
+    <input id="totalDistanceKM" type="hidden" name="totalDistanceMI" />
+    <input id="walkStartTime" type="hidden" name="walkStartTime" />
+    <input id="unitPreference" type="hidden" name="unitPreference" value="@Model.Wanderer.UnitPreference" />
+
     <div class="jumbotron-fluid">
         <h2 class="display-3" style="text-align : center">Let's take a walk!</h2>
         <hr class="my-sm-4">
@@ -20,18 +27,18 @@
                     <div class="form-group">
                         <h4>Your total points:</h4>
                         <input style="border:none; width:inherit; text-align:center" readonly="" class="form-control" id="totalPoints" name="totalPoints" />
-                        
+
                     </div>
                 </form>
             </div>
         </div>
-        
+
     </div>
     <div class="row">
-        <div class="col-md-6 collapse" style="text-align:center"id="createMarkersMap">
+        <div class="col-md-6 collapse" style="text-align:center" id="createMarkersMap">
             <div class="col text-center">
                 <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" onclick="prepareRouteWaypoints()" data-target="#routeDetails,#createMarkersMap,#routeMap">End your walk!</button>
-           @*On click, this button will need to pass in total time in minutes and total distance KM*@
+                @*On click, this button will need to pass in total time in minutes and total distance KM*@
             </div>
             <br />
             <div id="map"></div>
@@ -54,7 +61,7 @@
                                 Total time (minutes):
                             </th>
                             <th>
-                                Total Distance:
+                                Total Distance (@Model.Wanderer.UnitPreference):
                             </th>
                         </tr>
                     </thead>
@@ -83,12 +90,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <input id="currentRouteId" type="hidden" name="currentRouteId" />
-                <input id="totalTimeMinutes" type="hidden" name="totalTimeMinutes" />
-                <input id="totalDistanceMI" type="hidden" name="totalDistanceKM" />
-                <input id="totalDistanceKM" type="hidden" name="totalDistanceMI" />
-                <input id="walkStartTime" type="hidden" name="walkStartTime" />
-                <input id="unitPreference" type="hidden" name="unitPreference" value="@Model.Wanderer.UnitPreference" />
+
 
 
 

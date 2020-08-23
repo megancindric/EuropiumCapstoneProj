@@ -207,7 +207,7 @@ function createNewRoute(WandererId) {
         data: JSON.stringify(newRoute),
         contentType: 'application/json; charset=utf-8',
         success: function (result) {
-            document.getElementById('currentRouteId').value = result.routeId;
+            document.getElementById('hiddenRouteId').value = result.routeId;
             document.getElementById('totalDistanceKM').value = newRoute.TotalDistanceKilometers;
             document.getElementById('totalDistanceMI').value = newRoute.TotalDistanceMiles;
             $('#totalPoints').val(0);
@@ -233,7 +233,7 @@ function createRouteObject(WandererId) {
 
 
 function prepareRouteWaypoints() {
-    var RouteId = document.getElementById('currentRouteId').value;
+    var RouteId = document.getElementById('hiddenRouteId').value;
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
@@ -271,16 +271,22 @@ function parseWaypoints(data) {
 
 
 function updateRoute() {
+    var starValueString = $('input[name=starValue]:checked').val();
+    var totalPointsString = document.getElementById('totalPointsDisplay').value;
+    var totalDistanceKMString = document.getElementById('totalDistanceKM').value;
+    var totalDistanceMIString = document.getElementById('totalDistanceMI').value;
+    var routeIDString = document.getElementById('hiddenRouteId').value;
+
 
     var updatedRoute = {
-        "RouteId": parseInt(document.getElementById('hiddenRouteId').value),
+        "RouteId": parseInt(routeIDString),
         "RouteName": document.getElementById('editRouteName').value,
-        "RouteRating": parseInt(document.getElementById('starValue')),
+        "RouteRating": parseInt(starValueString),
         "RouteDescription": document.getElementById('editRouteDescription').value,
-        "TotalTimeMinutes": parseFloat(document.getElementById('totalTimeMinutesDisplay').value),
-        "TotalDistanceKilometers": document.getElementById('totalDistanceKM').value,
-        "TotalDistanceMiles": document.getElementById('totalDistanceMI').value,
-        "TotalPoints": parseFloat(document.getElementById('totalPoints').value),
+        "TotalTimeMinutes": document.getElementById('totalTimeMinutesDisplay').value,
+        "TotalDistanceKilometers": parseFloat(totalDistanceKMString),
+        "TotalDistanceMiles": parseFloat(totalDistanceMIString),
+        "TotalPoints": parseInt(totalPointsString),
     };
     $(document).ready(function () {
         $.ajax({
@@ -317,9 +323,13 @@ function computeTotalDistanceTime(response) {
     var startTime = document.getElementById("walkStartTime").value;
     var endTime = Date.now();
     var timeElapsedMinutes = Math.round((endTime - startTime) / 60000);
+    document.getElementById('totalTimeMinutesDisplay').value = timeElapsedMinutes;
     document.getElementById('totalTimeMinutesDisplay').innerHTML = timeElapsedMinutes;
+
     var totalPoints = document.getElementById('totalPoints').value;
+    document.getElementById('totalPointsDisplay').value = totalPoints;
     document.getElementById('totalPointsDisplay').innerHTML = totalPoints;
+
     if (unitPreference == "MI") {
         document.getElementById('totalDistanceMIDisplay').innerHTML = totalDistanceMI;
 
