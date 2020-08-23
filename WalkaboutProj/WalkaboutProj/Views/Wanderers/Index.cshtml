@@ -16,7 +16,7 @@
 
     <div class="container">
         <div class="jumbotron">
-            <h2 class="display-3" style="font-size:4vw;">Hello, @Html.DisplayFor(model => model.Wanderer.Username)!</h2>
+            <h2 class="display-3" style="text-align: center">Hello, @Html.DisplayFor(model => model.Wanderer.Username)!</h2>
         </div>
         <div class="row">
             <div class="col-lg-6">
@@ -135,7 +135,7 @@
                     @if (Model.MyRoutes.Count == 0)
                     {
                         <tr class="table-secondary disabled">
-                            <th scope="rowgroup" colspan="5">Oops - No routes to display :(</th>
+                            <th scope="rowgroup" colspan="5">No routes to display :(</th>
                         </tr>
                     }
                     else

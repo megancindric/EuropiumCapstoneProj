@@ -11,6 +11,7 @@
         <h2 class="display-3" style="text-align : center">Let's take a walk!</h2>
         <hr class="my-sm-4">
         <div class="col text-center">
+
             <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="startYourWalk " onclick="createNewRoute(@Model.Wanderer.WandererId); this.style.display = 'none'" data-target="#createMarkersMap, #markerTable, #pointsDisplay">Start your walk!</button>
         </div>
         <div class="container-fluid">
@@ -19,50 +20,77 @@
                     <div class="form-group">
                         <h4>Your total points:</h4>
                         <input style="border:none; width:inherit; text-align:center" readonly="" class="form-control" id="totalPoints" name="totalPoints" />
-                        <input id="currentRouteId" type="hidden" name="currentRouteId" />
-                        <input id="totalTimeMinutes" type="hidden" name="totalTimeMinutes" />
-                        <input id="totalDistanceMI" type="hidden" name="totalDistanceKM" />
-                        <input id="totalDistanceKM" type="hidden" name="totalDistanceMI" />
+                        
                     </div>
                 </form>
             </div>
         </div>
         
     </div>
-   
     <div class="row">
         <div class="col-md-6 collapse" style="text-align:center"id="createMarkersMap">
             <div class="col text-center">
-                <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" data-target="#routeDetails,#createMarkersMap,#routeMap">End your walk!</button>
+                <button type="button" class="btn btn-secondary btn-lg" data-toggle="collapse" id="endYourWalk" onclick="prepareRouteWaypoints()" data-target="#routeDetails,#createMarkersMap,#routeMap">End your walk!</button>
+           @*On click, this button will need to pass in total time in minutes and total distance KM*@
             </div>
             <br />
-
             <div id="map"></div>
         </div>
         <div class="col-md-6 collapse" id="routeMap">
             <div id="map2"></div>
         </div>
         <div class="col-md-6 collapse" id="routeDetails">
+
+
             <form id="edit-route">
                 <h3>Create your Route</h3>
-                <div class="form-group">
-                    <label class="control-label" for="totalTimeMinutes">Your total time: (in Minutes)</label>
-                    <input class="form-control" id="totalTimeMinutes" readonly="" name="totalTimeMinutes" />
-                </div>
-                @if (Model.Wanderer.UnitPreference == "MI")
-                {
-                    <div class="form-group">
-                        <label class="control-label" for="totalDistanceMI">Your route distance (in MI)</label>
-                        <input class="form-control" id="totalDistanceMI" readonly="" name="totalDistanceMI" />
-                    </div>
-                }
-                else
-                {
-                    <div class="form-group">
-                        <label class="control-label" for="totalDistanceKM">Your route distance (in KM)</label>
-                        <input class="form-control" id="totalDistanceKM" readonly="" name="totalDistanceKM" />
-                    </div>
-                }
+                <table class="table table-primary" style="text-align:center">
+                    <thead>
+                        <tr>
+                            <th>
+                                Total points:
+                            </th>
+                            <th>
+                                Total time (minutes):
+                            </th>
+                            <th>
+                                Total Distance:
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th id="totalPointsDisplay">
+
+                            </th>
+                            <th id="totalTimeMinutesDisplay">
+
+                            </th>
+                            @if (Model.Wanderer.UnitPreference == "MI")
+                            {
+                                <th id="totalDistanceMIDisplay">
+
+                                </th>
+                            }
+                            else
+                            {
+                                <th id="totalDistanceKMDisplay">
+
+                                </th>
+
+                            }
+
+                        </tr>
+                    </tbody>
+                </table>
+                <input id="currentRouteId" type="hidden" name="currentRouteId" />
+                <input id="totalTimeMinutes" type="hidden" name="totalTimeMinutes" />
+                <input id="totalDistanceMI" type="hidden" name="totalDistanceKM" />
+                <input id="totalDistanceKM" type="hidden" name="totalDistanceMI" />
+                <input id="walkStartTime" type="hidden" name="walkStartTime" />
+                <input id="unitPreference" type="hidden" name="unitPreference" value="@Model.Wanderer.UnitPreference" />
+
+
 
                 <div class="form-group">
                     <label for="editMarkerDescription">Name your route:   </label>
@@ -208,9 +236,8 @@
                 zoom: 14, center: currentLocation
             });
         document.getElementById("endYourWalk").addEventListener("click", () => {
-            endYourWalk();
+            prepareRouteWaypoints();
         })
-
             google.maps.event.addListener(map, 'rightclick', function (event) {
 
                 var marker = new google.maps.Marker({
@@ -304,25 +331,7 @@
             }
         );
     }
-
-    function computeTotalDistanceTime(result) {
-        var totalDistanceKM = 0;
-        var totalDistanceMI = 0;
-        var myRoute = result.routes[0];
-        for (i = 0; i < myRoute.legs.length; i++) {
-            totalDistanceKM += myRoute.legs[i].distance.value;
-        }
-        //convert to KM
-        totalDistanceKM = totalDistanceKM / 1000;
-        totalDistanceMI = totalDistanceKM * 0.621371;
-
-        $('#totalDistanceKM').val(totalDistanceKM);
-        $('#totalDistanceMI').val(totalDistanceMI);
-        var startTime = document.getElementById("totalTimeMinutes").value;
-        var endTime = Date.now();
-        var timeElapsedMinutes = Math.Round((endTime - startTime) / 60000);
-        $('#totalTimeMinutes').val(timeElapsedMinutes);
-    }
+  
 </script>
 
 

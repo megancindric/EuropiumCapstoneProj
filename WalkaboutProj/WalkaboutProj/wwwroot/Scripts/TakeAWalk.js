@@ -15,7 +15,7 @@
             success: function () {
                 marker.setDraggable(false);
                 currentPoints = parseInt(document.getElementById('totalPoints').value) + newMarker.PointValue;
-                $('#totalPoints').val(currentPoints)
+                $('#totalPoints').val(currentPoints);
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -198,7 +198,8 @@ function removeMarker(MarkerId) {
 
 function createNewRoute(WandererId) {
     var dateTime = Date.now();
-    var newRoute = createRouteObject(WandererId, dateTime);
+    document.getElementById('walkStartTime').value = dateTime;
+    var newRoute = createRouteObject(WandererId);
 
     $.ajax({
         type: 'POST',
@@ -206,18 +207,18 @@ function createNewRoute(WandererId) {
         data: JSON.stringify(newRoute),
         contentType: 'application/json; charset=utf-8',
         success: function (result) {
-            var currentRouteId = document.getElementById('currentRouteId');
-            currentRouteId.value = result.routeId;
+            document.getElementById('currentRouteId').value = result.routeId;
+            document.getElementById('totalDistanceKM').value = newRoute.TotalDistanceKilometers;
+            document.getElementById('totalDistanceMI').value = newRoute.TotalDistanceMiles;
             $('#totalPoints').val(0);
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alert("We hit a problem with POSTING"); //throw any errors
         }
-    }).then(function () {
-    });
+    })
 }
 
-function createRouteObject(WandererId, dateTime) {
+function createRouteObject(WandererId) {
     var routeInfo = {
         "WandererId": WandererId,
         "RouteName": "New Route",
@@ -225,18 +226,12 @@ function createRouteObject(WandererId, dateTime) {
         "TotalDistanceMiles": 0,
         "TotalDistanceKilometers" : 0,
         "RouteRating" : 0,
-        "totalTimeMinutes": dateTime,
+        "TotalTimeMinutes": 0,
     }
     return routeInfo;
 }
 
 
-
-function endYourWalk() {
-        //Will have ajax call to get all markers, run confirmation check, 
-        //Within this call can also dyanmically update point total
-    prepareRouteWaypoints();
-}
 function prepareRouteWaypoints() {
     var RouteId = document.getElementById('currentRouteId').value;
     $(document).ready(function () {
@@ -280,9 +275,9 @@ function updateRoute() {
     var updatedRoute = {
         "RouteId": parseInt(document.getElementById('hiddenRouteId').value),
         "RouteName": document.getElementById('editRouteName').value,
-        "RouteRating": parseInt(document.getElementById('starValue').value),
+        "RouteRating": parseInt(document.getElementById('starValue')),
         "RouteDescription": document.getElementById('editRouteDescription').value,
-        "TotalTimeMinutes": parseFloat(document.getElementById('totalTimeMinutes').value),
+        "TotalTimeMinutes": parseFloat(document.getElementById('totalTimeMinutesDisplay').value),
         "TotalDistanceKilometers": document.getElementById('totalDistanceKM').value,
         "TotalDistanceMiles": document.getElementById('totalDistanceMI').value,
         "TotalPoints": parseFloat(document.getElementById('totalPoints').value),
@@ -305,4 +300,35 @@ function updateRoute() {
             getRouteMarkers();
         });
     });
+}
+
+function computeTotalDistanceTime(response) {
+    var totalDistanceM = 0;
+    var unitPreference = document.getElementById('unitPreference').value;
+    var myRoute = response.routes[0];
+    for (i = 0; i < myRoute.legs.length; i++) {
+        totalDistanceM += myRoute.legs[i].distance.value;
+    }
+    //convert to KM
+    var totalDistanceKM = totalDistanceM / 1000;
+    var totalDistanceMI = totalDistanceKM * 0.621371;
+    document.getElementById('totalDistanceKM').value = totalDistanceKM;
+    document.getElementById('totalDistanceMI').value = totalDistanceMI;
+    var startTime = document.getElementById("walkStartTime").value;
+    var endTime = Date.now();
+    var timeElapsedMinutes = Math.round((endTime - startTime) / 60000);
+    document.getElementById('totalTimeMinutesDisplay').innerHTML = timeElapsedMinutes;
+    var totalPoints = document.getElementById('totalPoints').value;
+    document.getElementById('totalPointsDisplay').innerHTML = totalPoints;
+    if (unitPreference == "MI") {
+        document.getElementById('totalDistanceMIDisplay').innerHTML = totalDistanceMI;
+
+    }
+    else {
+        document.getElementById('totalDistanceKMDisplay').innerHTML = totalDistanceKM;
+
+    }
+
+
+
 }
