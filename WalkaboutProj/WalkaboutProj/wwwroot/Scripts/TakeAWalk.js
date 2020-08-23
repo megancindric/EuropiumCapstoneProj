@@ -29,7 +29,7 @@
 }
 //this one gets all markers then passes them into 
 function checkForDuplicates(marker,newMarker) {
-    var RouteId = document.getElementById('currentRouteId').value;
+    var RouteId = document.getElementById('hiddenRouteId').value;
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
@@ -118,7 +118,7 @@ function createMarkerObject(markerName, markerCategory, markerDescription, marke
     return markerInfo;
 }
 function getRouteMarkers() {
-    var RouteId = document.getElementById('currentRouteId').value;
+    var RouteId = document.getElementById('hiddenRouteId').value;
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
@@ -302,9 +302,7 @@ function updateRoute() {
             error: function (xhr, ajaxOptions, thrownError) {
                 alert("We hit a problem with PUTTING");
             }
-        }).then(function () {
-            getRouteMarkers();
-        });
+        })
     });
 }
 

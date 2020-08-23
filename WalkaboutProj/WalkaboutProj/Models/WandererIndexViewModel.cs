@@ -11,7 +11,8 @@ namespace WalkaboutProj.Models
         public List<Route> MyRoutes { get; set; }
         public Route HighScore { get; set; }
         public double MyTotalPoints { get; set; }
-        public double MyTotalDistance { get; set; }
+        public double MyTotalDistanceKM { get; set; }
+        public double MyTotalDistanceMI { get; set; }
         public int MyTotalWalkCount { get; set; }
         public double WandererLat { get; set; }
         public double WandererLong { get; set; }

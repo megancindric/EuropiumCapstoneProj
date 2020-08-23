@@ -13,6 +13,7 @@
 </style>
 
 <div class="container-fluid">
+    <input id="unitPreference" type="hidden" name="unitPreference" value="@Model.Wanderer.UnitPreference" />
 
     <div class="container">
         <div class="jumbotron">
@@ -26,7 +27,7 @@
                         <thead>
                             <tr>
                                 <th>Total Walks</th>
-                                <th>Total distance</th>
+                                <th>Total distance (@Model.Wanderer.UnitPreference)</th>
                                 <th>Total points</th>
                             </tr>
                         </thead>
@@ -44,7 +45,15 @@
                                         @Html.DisplayFor(model => model.MyRoutes.Count)
                                     </th>
                                     <th>
-                                        distanceCheck(@Model.MyTotalDistance);
+                                        @if (Model.Wanderer.UnitPreference == "MI")
+                                        {
+                                            @Html.DisplayFor(model => model.MyTotalDistanceMI);
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(model => model.MyTotalDistanceKM);
+
+                                        }
                                     </th>
                                     <th>
                                         @Html.DisplayFor(model => Model.MyTotalPoints)
@@ -120,107 +129,107 @@
         <button class="btn btn-secondary btn-lg" data-toggle="collapse" style="text-align:center" data-target="#routeHistory">Toggle My Route History</button>
     </div>
     <br />
-        <div class="row collapse" id="routeHistory"style="text-align:center">
-            <table class="table table-secondary">
+    <div class="row collapse" id="routeHistory" style="text-align:center">
+        <table class="table table-secondary">
+            <thead>
+                <tr>
+                    <th>Route Name</th>
+                    <th>Total Distance</th>
+                    <th>Total Points</th>
+                    <th>Route Rating</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.MyRoutes.Count == 0)
+                {
+                    <tr class="table-secondary disabled">
+                        <th scope="rowgroup" colspan="5">No routes to display :(</th>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var testRoute in Model.MyRoutes)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(routeItem => testRoute.RouteName)
+                            </td>
+                            <td>
+                                @if (Model.Wanderer.UnitPreference == "MI")
+                                {
+                                    @Html.DisplayFor(routeItem => testRoute.TotalDistanceMiles)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(routeItem => testRoute.TotalDistanceKilometers)
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(routeItem => testRoute.TotalPoints)
+                            </td>
+                            <td>
+                                @for (int i = 0; i < testRoute.RouteRating; i++)
+                                {
+                                    <span class="fa fa-star checked fa-2x"></span>
+
+                                }
+                                @for (int i = 0; i < 5 - testRoute.RouteRating; i++)
+                                {
+                                    <span class="fa fa-star fa-2x"></span>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#routeDetailsTable" onclick="getRouteDetails(@testRoute.RouteId); getMarkerDetails(@testRoute.RouteId)">
+                                    Details
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col text-center collapse" id="routeDetailsTable">
+        <button type="button" class="btn btn-lg btn-secondary" data-toggle="collapse" style="text-align:center"onclick="initMap()" data-target="#routeDetailsTable">Close details</button>
+    </div>
+    <div class="row collapse" id="routeDetailsTable" style="text-align:center">
+        <div class="col-md-6">
+            <h4>My Route:</h4>
+            <div id="map"></div>
+        </div>
+        <div class="col-md-6">
+            <h4>Route Details: </h4>
+            <table class="table table-primary" style="text-align:center">
                 <thead>
                     <tr>
                         <th>Route Name</th>
-                        <th>Total Distance</th>
+                        <th>Total Distance (@Model.Wanderer.UnitPreference)</th>
                         <th>Total Points</th>
-                        <th>Route Rating</th>
                         <th>Details</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @if (Model.MyRoutes.Count == 0)
-                    {
-                        <tr class="table-secondary disabled">
-                            <th scope="rowgroup" colspan="5">No routes to display :(</th>
-                        </tr>
-                    }
-                    else
-                    {
-                        foreach (var testRoute in Model.MyRoutes)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(routeItem => testRoute.RouteName)
-                                </td>
-                                <td>
-                                    @if (Model.Wanderer.UnitPreference == "MI")
-                                    {
-                                        @Html.DisplayFor(routeItem => testRoute.TotalDistanceMiles)
-                                    }
-                                    else
-                                    {
-                                        @Html.DisplayFor(routeItem => testRoute.TotalDistanceKilometers)
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(routeItem => testRoute.TotalPoints)
-                                </td>
-                                <td>
-                                    @for (int i = 0; i < testRoute.RouteRating; i++)
-                                    {
-                                        <span class="fa fa-star checked fa-2x"></span>
-
-                                    }
-                                    @for (int i = 0; i < 5 - testRoute.RouteRating; i++)
-                                    {
-                                        <span class="fa fa-star fa-2x"></span>
-                                    }
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#routeDetailsTable" onclick="getRouteDetails(@testRoute.RouteId); getMarkerDetails(@testRoute.RouteId)">
-                                        Details
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    }
+                <tbody class="table table-primary" id="routeDetails">
+                    @*here we will insert details about current route*@
+                </tbody>
+            </table>
+            <h4>Marker Details: </h4>
+            <table class="table table-secondary" style="text-align:center">
+                <thead>
+                    <tr>
+                        <th>Marker Name</th>
+                        <th>Marker Category</th>
+                        <th>Point Value</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody class="table table-secondary" id="routeMarkerDetails">
+                    @*here we will insert details about all markers matching that route*@
                 </tbody>
             </table>
         </div>
-        <div class="row collapse" id="routeDetailsTable">
-            <button type="button" class="btn btn-lg btn-primary" data-toggle="collapse" onclick="initMap()" data-target="#routeDetailsTable">Close details</button>
-        </div>
-        <div class="row collapse" id="routeDetailsTable">
-            <div class="col-md-6">
-                <h4>My Route:</h4>
-                <div id="map"></div>
-            </div>
-            <div class="col-md-6">
-                <h4>Route Details: </h4>
-                <table class="table table-primary">
-                    <thead>
-                        <tr>
-                            <th>Route Name</th>
-                            <th>Total Distance</th>
-                            <th>Total Points</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table table-primary" id="routeDetails">
-                        @*here we will insert details about current route*@
-                    </tbody>
-                </table>
-                <h4>Marker Details: </h4>
-                <table class="table table-secondary">
-                    <thead>
-                        <tr>
-                            <th>Marker Name</th>
-                            <th>Marker Category</th>
-                            <th>Point Value</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table table-secondary" id="routeMarkerDetails">
-                        @*here we will insert details about all markers matching that route*@
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
+</div>
 
     <script async defer src="@APIKeys.APIURL">
     </script>
@@ -297,8 +306,9 @@
     }
 
     function addRouteDetails(data) {
-        var totalDistance = data.totalDistanceKilometers
-         if (@Model.Wanderer.UnitPreference == "MI")
+        var totalDistance = data.totalDistanceKilometers;
+        var unitPreference = document.getElementById('unitPreference').value;
+         if  (unitPreference == "MI")
          {
              totalDistance = data.totalDistanceMiles;
           }

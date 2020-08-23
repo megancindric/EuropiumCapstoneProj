@@ -32,7 +32,8 @@ namespace WalkaboutProj.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             wandererView.Wanderer = _context.Wanderers.Where(w => w.IdentityUserId == userId).FirstOrDefault();
             wandererView.MyRoutes = _context.Routes.Where(r => r.WandererId == wandererView.Wanderer.WandererId).ToList();
-            wandererView.MyTotalDistance = 0;
+            wandererView.MyTotalDistanceKM = 0;
+            wandererView.MyTotalDistanceMI = 0;
             wandererView.MyTotalPoints = 0;
             wandererView.MyTotalWalkCount = wandererView.MyRoutes.Count;
             if (wandererView.MyRoutes.Count != 0)
@@ -41,16 +42,9 @@ namespace WalkaboutProj.Controllers
 
                 foreach (Route route in wandererView.MyRoutes)
                 {
-                    if(wandererView.Wanderer.UnitPreference == "MI")
-                    {
-                        wandererView.MyTotalDistance += route.TotalDistanceMiles;
 
-                    }
-                    else
-                    {
-                        wandererView.MyTotalDistance += route.TotalDistanceKilometers;
-
-                    }
+                        wandererView.MyTotalDistanceMI += route.TotalDistanceMiles;
+                        wandererView.MyTotalDistanceKM += route.TotalDistanceKilometers;
                     wandererView.MyTotalPoints += route.TotalPoints;
                 }
             }
