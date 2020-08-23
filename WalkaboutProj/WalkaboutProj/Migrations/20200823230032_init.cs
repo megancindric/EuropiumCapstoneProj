@@ -221,7 +221,7 @@ namespace WalkaboutProj.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a8988930-89f8-4bc2-881f-12aa43fa54e1", "cd123179-e7e6-4fc9-9464-6d7200b2c8b6", "Wanderer", "WANDERER" });
+                values: new object[] { "fff0cdeb-05f6-4116-a75d-a03527f038ea", "0a10e033-ae47-40a5-a0c2-6d4ce431b91b", "Wanderer", "WANDERER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

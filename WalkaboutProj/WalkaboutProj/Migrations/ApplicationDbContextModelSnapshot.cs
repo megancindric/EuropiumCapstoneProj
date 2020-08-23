@@ -48,8 +48,8 @@ namespace WalkaboutProj.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a8988930-89f8-4bc2-881f-12aa43fa54e1",
-                            ConcurrencyStamp = "cd123179-e7e6-4fc9-9464-6d7200b2c8b6",
+                            Id = "fff0cdeb-05f6-4116-a75d-a03527f038ea",
+                            ConcurrencyStamp = "0a10e033-ae47-40a5-a0c2-6d4ce431b91b",
                             Name = "Wanderer",
                             NormalizedName = "WANDERER"
                         });
