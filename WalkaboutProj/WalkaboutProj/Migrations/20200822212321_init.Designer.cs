@@ -10,7 +10,7 @@ using WalkaboutProj.Data;
 namespace WalkaboutProj.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200817000028_init")]
+    [Migration("20200822212321_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,8 +50,8 @@ namespace WalkaboutProj.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "32ea3930-faff-40c6-9c34-febfbbbf8875",
-                            ConcurrencyStamp = "13e3ccf2-417f-424d-b3e5-8f11809c9834",
+                            Id = "7627e04f-2e51-4e39-ab6e-eb30bd50d6c4",
+                            ConcurrencyStamp = "55761374-df72-4f0a-957e-8d5fcb740b74",
                             Name = "Wanderer",
                             NormalizedName = "WANDERER"
                         });
@@ -272,15 +272,6 @@ namespace WalkaboutProj.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("LocationLat")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LocationLong")
-                        .HasColumnType("float");
-
                     b.Property<string>("RouteDescription")
                         .HasColumnType("nvarchar(max)");
 
@@ -288,14 +279,20 @@ namespace WalkaboutProj.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("RouteRating")
+                        .HasColumnType("int");
 
-                    b.Property<double>("TotalDistance")
+                    b.Property<double>("TotalDistanceKilometers")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalDistanceMiles")
                         .HasColumnType("float");
 
                     b.Property<double>("TotalPoints")
                         .HasColumnType("float");
+
+                    b.Property<float>("TotalTimeMilliseconds")
+                        .HasColumnType("real");
 
                     b.Property<int>("WandererId")
                         .HasColumnType("int");

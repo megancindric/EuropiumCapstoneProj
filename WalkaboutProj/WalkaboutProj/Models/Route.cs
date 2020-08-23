@@ -23,10 +23,13 @@ namespace WalkaboutProj.Models
         public string RouteDescription { get; set; }
 
         [Display(Name = "Total Time")]
-        public float TotalTimeMilliseconds { get; set; }
+        public double TotalTimeMinutes { get; set; }
 
-        [Display(Name = "Total Distance")]
-        public double TotalDistance { get; set; }
+        [Display(Name = "Total Distance (KM)")]
+        public double TotalDistanceKilometers { get; set; }
+
+        [Display(Name = "Total Distance (MI)")]
+        public double TotalDistanceMiles { get; set; }
 
         [Display(Name = "Total Points")]
         public double TotalPoints { get; set; }

@@ -92,7 +92,6 @@ function updateMarker() {
             data: JSON.stringify(updatedMarker),
             contentType: "application/json; charset=utf-8",
             success: function () {
-                alert("Your marker has been updated!");
                 $(document.getElementById('edit-marker').reset());
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -143,8 +142,8 @@ function addMarkersToTable(data) {
                     <tr><td>${data[i].markerName}</td>
                     <td>${data[i].markerCategory}</td>
                     <td>${data[i].markerDescription}</td>
-                    <td><button type="submit" class="btn btn-outline-danger" data-toggle="collapse" data-target="#editMarkerForm" onclick="editSingleMarker(${data[i].markerId})">Edit</button>
-                    <td><button type="submit" class="btn btn-outline-danger"onclick="removeMarker(${data[i].markerId})">Delete</button></tr>
+                    <td><button type="submit" class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#editMarkerForm" onclick="editSingleMarker(${data[i].markerId})">Edit</button>
+                    <td><button type="submit" class="btn btn-sm btn-secondary"onclick="removeMarker(${data[i].markerId})">Delete</button></tr>
                     </tr>`)
     }
 }
@@ -156,7 +155,6 @@ function editSingleMarker(MarkerId) {
             data: { MarkerId: MarkerId },
             url: '/Wanderers/GetMarker',
             success: function () {
-                alert("Got the marker!");
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert("We hit a problem with GETTING");
@@ -224,32 +222,15 @@ function createRouteObject(WandererId, dateTime) {
         "WandererId": WandererId,
         "RouteName": "New Route",
         "RouteDescription": "Enter a description for your route",
-        "TotalDistance": 0,
+        "TotalDistanceMiles": 0,
+        "TotalDistanceKilometers" : 0,
         "RouteRating" : 0,
-        "TotalTimeMilliseconds": dateTime,
+        "totalTimeMinutes": dateTime,
     }
     return routeInfo;
 }
 
-function initialRouteGet(dateTime) {
-    $(document).ready(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Wanderers/InitialRouteGet',
-            data: { TotalTimeMilliseconds: dateTime },
-            success: function () {
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert("We hit a problem with GETTING");
-            }
-        }).then(function (data) {
-            $('#hiddenRouteId').val(data['RouteId'])
-            $('#totalTime').val(data[TotalTimeMilliseconds])
-            //Will need to dynamically add points value in as well
-            //assign route edit values here
-        })
-    })
-}
+
 
 function endYourWalk() {
         //Will have ajax call to get all markers, run confirmation check, 
@@ -295,13 +276,15 @@ function parseWaypoints(data) {
 
 
 function updateRoute() {
+
     var updatedRoute = {
         "RouteId": parseInt(document.getElementById('hiddenRouteId').value),
         "RouteName": document.getElementById('editRouteName').value,
         "RouteRating": parseInt(document.getElementById('starValue').value),
         "RouteDescription": document.getElementById('editRouteDescription').value,
-        "TotalTimeMilliseconds": JSON.parse(document.getElementById('totalTime').value),
-        "TotalDistance": parseFloat(document.getElementById('totalDistance').value),
+        "TotalTimeMinutes": parseFloat(document.getElementById('totalTimeMinutes').value),
+        "TotalDistanceKilometers": document.getElementById('totalDistanceKM').value,
+        "TotalDistanceMiles": document.getElementById('totalDistanceMI').value,
         "TotalPoints": parseFloat(document.getElementById('totalPoints').value),
     };
     $(document).ready(function () {

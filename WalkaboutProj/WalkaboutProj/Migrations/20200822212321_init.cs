@@ -76,12 +76,11 @@ namespace WalkaboutProj.Migrations
                     WandererId = table.Column<int>(nullable: false),
                     RouteName = table.Column<string>(nullable: false),
                     RouteDescription = table.Column<string>(nullable: true),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    TotalDistance = table.Column<double>(nullable: false),
+                    TotalTimeMilliseconds = table.Column<float>(nullable: false),
+                    TotalDistanceKilometers = table.Column<double>(nullable: false),
+                    TotalDistanceMiles = table.Column<double>(nullable: false),
                     TotalPoints = table.Column<double>(nullable: false),
-                    LocationLat = table.Column<double>(nullable: false),
-                    LocationLong = table.Column<double>(nullable: false)
+                    RouteRating = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,7 +221,7 @@ namespace WalkaboutProj.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "32ea3930-faff-40c6-9c34-febfbbbf8875", "13e3ccf2-417f-424d-b3e5-8f11809c9834", "Wanderer", "WANDERER" });
+                values: new object[] { "7627e04f-2e51-4e39-ab6e-eb30bd50d6c4", "55761374-df72-4f0a-957e-8d5fcb740b74", "Wanderer", "WANDERER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

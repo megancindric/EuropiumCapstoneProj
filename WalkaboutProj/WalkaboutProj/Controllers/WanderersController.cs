@@ -35,12 +35,22 @@ namespace WalkaboutProj.Controllers
             wandererView.MyTotalDistance = 0;
             wandererView.MyTotalPoints = 0;
             wandererView.MyTotalWalkCount = wandererView.MyRoutes.Count;
-            wandererView.HighScore = wandererView.MyRoutes.OrderByDescending(r => r.TotalPoints).First();
             if (wandererView.MyRoutes.Count != 0)
             {
+                wandererView.HighScore = wandererView.MyRoutes.OrderByDescending(r => r.TotalPoints).First();
+
                 foreach (Route route in wandererView.MyRoutes)
                 {
-                    wandererView.MyTotalDistance += route.TotalDistance;
+                    if(wandererView.Wanderer.UnitPreference == "MI")
+                    {
+                        wandererView.MyTotalDistance += route.TotalDistanceMiles;
+
+                    }
+                    else
+                    {
+                        wandererView.MyTotalDistance += route.TotalDistanceKilometers;
+
+                    }
                     wandererView.MyTotalPoints += route.TotalPoints;
                 }
             }
@@ -312,19 +322,6 @@ namespace WalkaboutProj.Controllers
             return Ok(currentRoute);
         }
 
-        // GET specific marker
-        [HttpGet]
-        public IActionResult InitialRouteGet(float dateTime)
-        {
-            // Retrieve movie by id from db logic
-            // return Ok(movie);
-            var currentRoute = _context.Routes.Where(s => s.TotalTimeMilliseconds == dateTime).SingleOrDefault();
-            if (currentRoute == null)
-            {
-                return NotFound();
-            }
-            return Ok(currentRoute);
-        }
 
         [HttpPut]
         public ActionResult PutRoute([FromBody] Route updatedRoute)
@@ -334,11 +331,13 @@ namespace WalkaboutProj.Controllers
             {
                 return NotFound();
             }
+            
             routeToUpdate.RouteRating = updatedRoute.RouteRating;
             routeToUpdate.RouteName = updatedRoute.RouteName;
             routeToUpdate.RouteDescription = updatedRoute.RouteDescription;
-            routeToUpdate.TotalDistance = updatedRoute.TotalDistance;
-            routeToUpdate.TotalTimeMilliseconds = updatedRoute.TotalTimeMilliseconds;
+            routeToUpdate.TotalDistanceMiles = updatedRoute.TotalDistanceMiles;
+            routeToUpdate.TotalDistanceKilometers = updatedRoute.TotalDistanceKilometers;
+            routeToUpdate.TotalTimeMinutes = updatedRoute.TotalTimeMinutes;
             routeToUpdate.TotalPoints = updatedRoute.TotalPoints;
             _context.Update(routeToUpdate);
             _context.SaveChanges();

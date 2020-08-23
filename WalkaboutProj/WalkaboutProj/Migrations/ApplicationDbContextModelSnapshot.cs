@@ -48,8 +48,8 @@ namespace WalkaboutProj.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7612a40e-fc43-43c2-b120-6feb0624e3b4",
-                            ConcurrencyStamp = "a60f6e47-1043-40bd-af31-128da16ca612",
+                            Id = "7627e04f-2e51-4e39-ab6e-eb30bd50d6c4",
+                            ConcurrencyStamp = "55761374-df72-4f0a-957e-8d5fcb740b74",
                             Name = "Wanderer",
                             NormalizedName = "WANDERER"
                         });
@@ -280,7 +280,10 @@ namespace WalkaboutProj.Migrations
                     b.Property<int>("RouteRating")
                         .HasColumnType("int");
 
-                    b.Property<double>("TotalDistance")
+                    b.Property<double>("TotalDistanceKilometers")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalDistanceMiles")
                         .HasColumnType("float");
 
                     b.Property<double>("TotalPoints")
