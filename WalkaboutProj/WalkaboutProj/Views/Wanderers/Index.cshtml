@@ -127,8 +127,30 @@
     </div>
     <div class="col text-center">
         <button class="btn btn-secondary btn-lg" data-toggle="collapse" style="text-align:center" data-target="#routeHistory">Toggle My Route History</button>
+        <button class="btn btn-secondary btn-lg" data-toggle="collapse" style="text-align:center" data-target="#profileInfo">Toggle My Profile Details</button>
+
     </div>
     <br />
+    <div class="row collapse" id="profileInfo" style="text-align:center">
+        <table class="table table-secondary">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Wanderer.FirstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Wanderer.LastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Wanderer.ZipCode)</th>
+                    <th>@Html.DisplayNameFor(model => model.Wanderer.UnitPreference)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>@Html.DisplayFor(model => model.Wanderer.FirstName)</th>
+                    <th>@Html.DisplayFor(model => model.Wanderer.LastName)</th>
+                    <th>@Html.DisplayFor(model => model.Wanderer.ZipCode)</th>
+                    <th>@Html.DisplayFor(model => model.Wanderer.UnitPreference)</th>
+                </tr>       
+            </tbody>
+        </table>
+    </div>
     <div class="row collapse" id="routeHistory" style="text-align:center">
         <table class="table table-secondary">
             <thead>
@@ -191,7 +213,7 @@
         </table>
     </div>
     <div class="col text-center collapse" id="routeDetailsTable">
-        <button type="button" class="btn btn-lg btn-secondary" data-toggle="collapse" style="text-align:center"onclick="initMap()" data-target="#routeDetailsTable">Close details</button>
+        <button type="button" class="btn btn-lg btn-secondary" data-toggle="collapse" style="text-align:center" onclick="initMap()" data-target="#routeDetailsTable">Close details</button>
     </div>
     <div class="row collapse" id="routeDetailsTable" style="text-align:center">
         <div class="col-md-6">
